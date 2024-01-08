@@ -11,9 +11,16 @@ config_version=5
 [application]
 
 config/name="bman2"
-run/main_scene="res://bman_2.tscn"
+run/main_scene="res://Scenes/menu.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Globals="*res://Globals/globals.gd"
+Network="*res://Globals/Network/network.gd"
+Client="*res://Globals/Network/client.tscn"
+Server="*res://Globals/Network/server.tscn"
 
 [input]
 

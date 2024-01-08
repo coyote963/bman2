@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://s7nbd7fg7l3k"]
 
-[ext_resource type="Script" path="res://character.gd" id="1_rhoob"]
+[ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://b5083cr1s4hk2" path="res://guy_with_feet.png" id="2_vputq"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
 [ext_resource type="Script" path="res://Sprite2D.gd" id="4_a8brg"]
@@ -20,8 +20,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jywao"]
 size = Vector2(38, 128)
 
-[node name="character" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
 script = ExtResource("1_rhoob")
+walljump_initial_horizontal_speed = -400
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_xaeb6")
@@ -46,3 +48,12 @@ script = ExtResource("3_8bmha")
 [node name="Sprite2D" type="Sprite2D" parent="Weapon"]
 texture = ExtResource("4_ssa6y")
 script = ExtResource("4_a8brg")
+
+[node name="IDLabel" type="Label" parent="."]
+offset_left = -103.0
+offset_top = -87.0
+offset_right = 103.0
+offset_bottom = -64.0
+pivot_offset = Vector2(103, -1)
+text = "unique_id"
+horizontal_alignment = 1

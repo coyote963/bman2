@@ -14,7 +14,8 @@ extends CharacterBody2D
 var direction
 var has_double_jump = false
 
-
+func _ready():
+	$IDLabel.text = name
 
 func get_input() -> float:
 	return Input.get_axis("move_left", "move_right")
@@ -50,17 +51,24 @@ func handle_double_jump():
 		has_double_jump = false
 
 func _process(delta):
+	
+	if is_wall_sliding() :
+		velocity.y = 200
+	else:
+		velocity.y += gravity * delta
+	
+	move_and_slide()
+	
+	if !is_multiplayer_authority(): 
+		return
+	
 	direction = get_input()
 	if direction != 0:
 		velocity.x = move_toward(velocity.x, direction * max_speed, acceleration * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 	
-	if is_wall_sliding() :
-		velocity.y = 200
-	else:
-		velocity.y += gravity * delta
 	handle_jump()
 	handle_double_jump()
 	handle_wall_jump()
-	move_and_slide()
+	
