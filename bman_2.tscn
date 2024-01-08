@@ -1,20 +1,27 @@
-[gd_scene load_steps=3 format=3 uid="uid://nt17qfukiu00"]
+[gd_scene load_steps=5 format=3 uid="uid://nt17qfukiu00"]
 
 [ext_resource type="PackedScene" uid="uid://s7nbd7fg7l3k" path="res://character.tscn" id="1_35p8n"]
+[ext_resource type="Texture2D" uid="uid://c0wade07cia2k" path="res://icon.svg" id="2_ourer"]
 
-[sub_resource type="ImageTexture" id="ImageTexture_b6eok"]
-resource_local_to_scene = true
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x65i2"]
+texture = ExtResource("2_ourer")
+texture_region_size = Vector2i(128, 128)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+
+[sub_resource type="TileSet" id="TileSet_1ckjw"]
+tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_x65i2")
 
 [node name="bman2" type="Node2D"]
 
 [node name="character" parent="." instance=ExtResource("1_35p8n")]
-position = Vector2(522, 115)
+position = Vector2(418, 99)
 
-[node name="walls" type="StaticBody2D" parent="."]
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="walls"]
-polygon = PackedVector2Array(16, 16, 48, 0, 64, 168, 216, 136, 256, 296, 552, 280, 712, 200, 928, 264, 1016, 144, 1096, 208, 1048, 408, 424, 472, 144, 472, -104, 176, 8, 16)
-
-[node name="CollisionPolygon2D2" type="Polygon2D" parent="walls"]
-texture = SubResource("ImageTexture_b6eok")
-polygon = PackedVector2Array(16, 16, 48, 0, 64, 168, 216, 136, 256, 296, 552, 280, 712, 200, 928, 264, 1016, 144, 1096, 208, 1048, 408, 424, 472, 144, 472, -104, 176, 8, 16)
+[node name="map" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_1ckjw")
+format = 2
+layer_0/tile_data = PackedInt32Array(65535, 0, 0, 131071, 0, 0, 196607, 0, 0, 131072, 0, 0, 131073, 0, 0, 131074, 0, 0, 131075, 0, 0, 131076, 0, 0, 131077, 0, 0, 131078, 0, 0, 131079, 0, 0, 131081, 0, 0, 131080, 0, 0, 131082, 0, 0, 65547, 0, 0, 12, 0, 0)
