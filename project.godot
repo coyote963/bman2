@@ -11,13 +11,8 @@ config_version=5
 [application]
 
 config/name="bman2"
-<<<<<<< HEAD
 run/main_scene="res://Scenes/menu.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-=======
-run/main_scene="res://bman_2.tscn"
-config/features=PackedStringArray("4.0", "Forward Plus")
->>>>>>> feature/fastfall
 config/icon="res://icon.svg"
 
 [autoload]
