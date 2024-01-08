@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=9 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://b5083cr1s4hk2" path="res://guy_with_feet.png" id="2_vputq"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
+[ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="3_b2fi1"]
 [ext_resource type="Script" path="res://Sprite2D.gd" id="4_a8brg"]
 [ext_resource type="Texture2D" uid="uid://c8xdn3u0b5qo" path="res://M4_alt.png" id="4_ssa6y"]
 
@@ -27,6 +28,7 @@ walljump_initial_horizontal_speed = -400
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_xaeb6")
+script = ExtResource("3_b2fi1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_jywao")
