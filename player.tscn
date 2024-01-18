@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=11 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://b5083cr1s4hk2" path="res://guy_with_feet.png" id="2_vputq"]
@@ -6,7 +6,8 @@
 [ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="3_b2fi1"]
 [ext_resource type="Script" path="res://Sprite2D.gd" id="4_a8brg"]
 [ext_resource type="Texture2D" uid="uid://c8xdn3u0b5qo" path="res://M4_alt.png" id="4_ssa6y"]
-[ext_resource type="Script" path="res://Input.gd" id="7_hxuxd"]
+[ext_resource type="Script" path="res://addons/netfox.extras/base-net-input.gd" id="7_r3afu"]
+[ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_xaeb6"]
 animations = [{
@@ -22,9 +23,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jywao"]
 size = Vector2(38, 128)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("input")]
 collision_layer = 2
 script = ExtResource("1_rhoob")
+input = NodePath("BaseNetInput")
 walljump_initial_horizontal_speed = -400
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -61,5 +63,10 @@ pivot_offset = Vector2(103, -1)
 text = "unique_id"
 horizontal_alignment = 1
 
-[node name="Input" type="Node" parent="."]
-script = ExtResource("7_hxuxd")
+[node name="BaseNetInput" type="Node" parent="."]
+script = ExtResource("7_r3afu")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("8_aqte3")
+root = NodePath("..")
+state_properties = Array[String]([":global_position"])

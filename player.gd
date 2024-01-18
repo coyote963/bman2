@@ -3,6 +3,8 @@ extends CharacterBody2D
 @onready var _leftRaycast = $LeftWalljumpRaycast
 @onready var _animated_sprite = $AnimatedSprite2D
 
+@export var input: BaseNetInput
+
 @export var gravity = 980
 @export var acceleration = 500
 @export var max_speed = 1500
@@ -33,7 +35,7 @@ func is_wall_sliding():
 func handle_wall_jump():
 	if (
 		(_rightRaycast.is_colliding() or _leftRaycast.is_colliding()) and
-		Input.is_action_just_pressed("jump") and
+		input.is_jump_just_pressed and
 		not is_on_floor() 
 	):
 		velocity.y = walljump_initial_vertical_speed
@@ -44,28 +46,23 @@ func handle_wall_jump():
 		has_double_jump = true
 
 func handle_jump():
-	if is_on_floor() and Input.is_action_just_pressed("jump"):
+	if is_on_floor() and input.is_jump_just_pressed:
 		velocity.y = jump_initial_speed
 		has_double_jump = true
-	if Input.is_action_just_released("jump") and velocity.y < 0:
+	if input.is_jump_just_released and velocity.y < 0:
 		velocity.y *= jump_release_slowdown
 
 func handle_double_jump():
-	if not is_on_floor() and Input.is_action_just_pressed("jump") and has_double_jump:
+	if not is_on_floor() and input.is_jump_just_pressed and has_double_jump:
 		velocity.y = jump_initial_speed
 		has_double_jump = false
 
-func _process(delta):
-	
+func _rollback_tick(delta):
 	if is_wall_sliding() :
 		velocity.y = 200
 	else:
 		velocity.y += gravity * delta
 	
-	move_and_slide()
-	
-	if !is_multiplayer_authority(): 
-		return
 	
 	direction = get_input()
 	if direction != 0:
@@ -83,4 +80,5 @@ func _process(delta):
 	handle_jump()
 	handle_double_jump()
 	handle_wall_jump()
+	move_and_slide()
 	
