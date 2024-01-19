@@ -3,7 +3,7 @@ extends CharacterBody2D
 @onready var _leftRaycast = $LeftWalljumpRaycast
 @onready var _animated_sprite = $AnimatedSprite2D
 
-@export var input: BaseNetInput
+@export var input: PlayerInput
 
 @export var gravity = 980
 @export var acceleration = 500
@@ -21,9 +21,13 @@ var has_double_jump = false
 
 func _ready():
 	$IDLabel.text = name
+	if input == null:
+		input = $PlayerInput
+	
+	# Wait a single frame, so player spawner has time to set input owner
+	await get_tree().process_frame
+	$RollbackSynchronizer.process_settings()
 
-func get_input() -> float:
-	return Input.get_axis("move_left", "move_right")
 
 func is_wall_sliding():
 	return (
@@ -57,14 +61,14 @@ func handle_double_jump():
 		velocity.y = jump_initial_speed
 		has_double_jump = false
 
-func _rollback_tick(delta):
+func _rollback_tick(delta, tick, is_fresh):
 	if is_wall_sliding() :
 		velocity.y = 200
 	else:
 		velocity.y += gravity * delta
 	
 	
-	direction = get_input()
+	direction = input.horizontal_direction
 	if direction != 0:
 		velocity.x = move_toward(velocity.x, direction * max_speed, acceleration * delta)
 	else:
@@ -80,5 +84,7 @@ func _rollback_tick(delta):
 	handle_jump()
 	handle_double_jump()
 	handle_wall_jump()
-	move_and_slide()
 	
+	velocity *= NetworkTime.physics_factor
+	move_and_slide()
+	velocity /= NetworkTime.physics_factor

@@ -16,8 +16,9 @@ tile_size = Vector2i(128, 128)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_x65i2")
 
-[node name="NetworkedGame" type="Node"]
+[node name="NetworkedGame" type="Node" node_paths=PackedStringArray("players")]
 script = ExtResource("1_0syg2")
+players = NodePath("Players")
 
 [node name="World" type="Node2D" parent="."]
 
