@@ -1,4 +1,6 @@
 extends Sprite2D
 
+@export var input: PlayerInput;
+
 func _process(delta):
-	look_at(get_global_mouse_position())
+	look_at(input.mouse_coordinates)
