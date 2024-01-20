@@ -52,9 +52,10 @@ script = ExtResource("3_8bmha")
 
 [node name="Weapon" type="Node2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="Weapon"]
+[node name="Sprite2D" type="Sprite2D" parent="Weapon" node_paths=PackedStringArray("input")]
 texture = ExtResource("4_ssa6y")
 script = ExtResource("4_a8brg")
+input = NodePath("../../PlayerInput")
 
 [node name="IDLabel" type="Label" parent="."]
 offset_left = -103.0
@@ -69,7 +70,7 @@ horizontal_alignment = 1
 script = ExtResource("8_aqte3")
 root = NodePath("..")
 state_properties = Array[String]([":global_position", ":velocity"])
-input_properties = Array[String](["PlayerInput:is_jump_just_pressed", "PlayerInput:is_jump_just_released", "PlayerInput:horizontal_direction", "PlayerInput:is_holding_down"])
+input_properties = Array[String](["PlayerInput:is_jump_just_pressed", "PlayerInput:is_jump_just_released", "PlayerInput:horizontal_direction", "PlayerInput:is_holding_down", "PlayerInput:mouse_coordinates"])
 
 [node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("9_18a01")
