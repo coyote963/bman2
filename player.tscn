@@ -1,23 +1,157 @@
-[gd_scene load_steps=12 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=31 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
-[ext_resource type="Texture2D" uid="uid://b5083cr1s4hk2" path="res://guy_with_feet.png" id="2_vputq"]
+[ext_resource type="Texture2D" uid="uid://qvbj0nsvicvv" path="res://Assets/Idle/Thin.png" id="2_cqbrs"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
-[ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="3_b2fi1"]
+[ext_resource type="Texture2D" uid="uid://cxpgc4n7cnlq1" path="res://Assets/Jump/Jump.png" id="3_ya2am"]
 [ext_resource type="Script" path="res://Sprite2D.gd" id="4_a8brg"]
+[ext_resource type="Texture2D" uid="uid://dga61ipc1klvs" path="res://Assets/Run/Run.png" id="4_ndtew"]
 [ext_resource type="Texture2D" uid="uid://c8xdn3u0b5qo" path="res://M4_alt.png" id="4_ssa6y"]
 [ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
 [ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_sghbh"]
+atlas = ExtResource("2_cqbrs")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1bgc"]
+atlas = ExtResource("2_cqbrs")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2vvre"]
+atlas = ExtResource("2_cqbrs")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pfmr8"]
+atlas = ExtResource("2_cqbrs")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_18pom"]
+atlas = ExtResource("2_cqbrs")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ifyce"]
+atlas = ExtResource("2_cqbrs")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q7j01"]
+atlas = ExtResource("3_ya2am")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_00jgw"]
+atlas = ExtResource("3_ya2am")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8885m"]
+atlas = ExtResource("3_ya2am")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m0x2p"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bxbau"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_68uhm"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6xs0i"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1hmj"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xi02n"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y3cos"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o3a24"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_knio4"]
+atlas = ExtResource("4_ndtew")
+region = Rect2(512, 0, 64, 64)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_xaeb6"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_vputq")
+"texture": SubResource("AtlasTexture_sghbh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h1bgc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2vvre")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pfmr8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_18pom")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ifyce")
 }],
 "loop": true,
-"name": &"default",
+"name": &"IDLE",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q7j01")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00jgw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8885m")
+}],
+"loop": false,
+"name": &"JUMPING",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m0x2p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bxbau")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_68uhm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6xs0i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1hmj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xi02n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y3cos")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o3a24")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_knio4")
+}],
+"loop": true,
+"name": &"RUNNING",
 "speed": 5.0
 }]
 
@@ -28,21 +162,22 @@ size = Vector2(38, 128)
 collision_layer = 2
 script = ExtResource("1_rhoob")
 input = NodePath("PlayerInput")
-walljump_initial_horizontal_speed = -400
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(6, -8)
+scale = Vector2(2.53906, 2.45313)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
-script = ExtResource("3_b2fi1")
+animation = &"JUMPING"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_jywao")
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
-position = Vector2(15, 0)
+position = Vector2(1, 0)
 target_position = Vector2(24, 0)
 
 [node name="LeftWalljumpRaycast" type="RayCast2D" parent="."]
-position = Vector2(-13, 0)
+position = Vector2(-1, 0)
 target_position = Vector2(-24, 0)
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -51,13 +186,16 @@ position_smoothing_enabled = true
 script = ExtResource("3_8bmha")
 
 [node name="Weapon" type="Node2D" parent="."]
+visible = false
 
 [node name="Sprite2D" type="Sprite2D" parent="Weapon" node_paths=PackedStringArray("input")]
+visible = false
 texture = ExtResource("4_ssa6y")
 script = ExtResource("4_a8brg")
 input = NodePath("../../PlayerInput")
 
 [node name="IDLabel" type="Label" parent="."]
+visible = false
 offset_left = -103.0
 offset_top = -87.0
 offset_right = 103.0
