@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://yso4co3gh24m"]
+
+[ext_resource type="Script" path="res://Game/Objects/Items/Tools/Class/tool.gd" id="1_oqb6r"]
+[ext_resource type="AudioStream" uid="uid://bjty4sufn4wai" path="res://Assets/Sounds/FirePlaceholder.mp3" id="2_254ya"]
+
+[node name="Tool" type="Node2D" node_paths=PackedStringArray("sound")]
+script = ExtResource("1_oqb6r")
+sound = NodePath("Fire")
+
+[node name="Fire" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_254ya")

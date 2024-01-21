@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://b5083cr1s4hk2" path="res://guy_with_feet.png" id="2_vputq"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
 [ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="3_b2fi1"]
-[ext_resource type="Script" path="res://Sprite2D.gd" id="4_a8brg"]
-[ext_resource type="Texture2D" uid="uid://c8xdn3u0b5qo" path="res://M4_alt.png" id="4_ssa6y"]
+[ext_resource type="Script" path="res://Hands.gd" id="5_o8p22"]
+[ext_resource type="PackedScene" uid="uid://cv0mw24kpj4wu" path="res://Game/Objects/Items/Tools/Weapons/Guns/rifle.tscn" id="6_0wd1f"]
 [ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
 [ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
@@ -50,11 +50,11 @@ visible = false
 position_smoothing_enabled = true
 script = ExtResource("3_8bmha")
 
-[node name="Weapon" type="Node2D" parent="."]
+[node name="Hands" type="Node2D" parent="." node_paths=PackedStringArray("input")]
+script = ExtResource("5_o8p22")
+input = NodePath("../PlayerInput")
 
-[node name="Sprite2D" type="Sprite2D" parent="Weapon" node_paths=PackedStringArray("input")]
-texture = ExtResource("4_ssa6y")
-script = ExtResource("4_a8brg")
+[node name="Rifle" parent="Hands" node_paths=PackedStringArray("input") instance=ExtResource("6_0wd1f")]
 input = NodePath("../../PlayerInput")
 
 [node name="IDLabel" type="Label" parent="."]

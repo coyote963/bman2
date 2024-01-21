@@ -20,6 +20,9 @@ var direction
 var has_double_jump = false
 
 func _ready():
+	
+	gravity = Globals.gravity
+	
 	$IDLabel.text = name
 	if input == null:
 		input = $PlayerInput
@@ -29,6 +32,7 @@ func _ready():
 
 
 func is_wall_sliding():
+	
 	return (
 		(_rightRaycast.is_colliding() or _leftRaycast.is_colliding())
 		and not is_on_floor()
@@ -36,6 +40,7 @@ func is_wall_sliding():
 	)
 
 func handle_wall_jump():
+	
 	if (
 		(_rightRaycast.is_colliding() or _leftRaycast.is_colliding()) and
 		input.is_jump_just_pressed and
@@ -49,6 +54,7 @@ func handle_wall_jump():
 		has_double_jump = true
 
 func handle_jump():
+	
 	if is_on_floor() and input.is_jump_just_pressed:
 		velocity.y = jump_initial_speed
 		has_double_jump = true
@@ -56,6 +62,7 @@ func handle_jump():
 		velocity.y *= jump_release_slowdown
 
 func handle_double_jump():
+	
 	if not is_on_floor() and input.is_jump_just_pressed and has_double_jump:
 		velocity.y = jump_initial_speed
 		has_double_jump = false

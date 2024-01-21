@@ -9,6 +9,7 @@ var is_jump_just_released = false
 var horizontal_direction = 1
 var is_holding_down = false
 var mouse_coordinates = Vector2.ZERO
+var is_firing = false
 
 func _ready():
 	NetworkTime.before_tick_loop.connect(_gather)
@@ -25,3 +26,4 @@ func _gather():
 	horizontal_direction = get_horizontal_axis()
 	_is_prev_frame_jump = Input.is_action_pressed("jump")
 	mouse_coordinates = owner.get_global_mouse_position()
+	is_firing = Input.is_action_pressed("fire")
