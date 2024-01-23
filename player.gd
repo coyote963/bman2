@@ -5,7 +5,7 @@ extends CharacterBody2D
 
 @export var input: PlayerInput
 
-@export var air_friction = 1000
+@export var air_friction = 200
 @export var ground_friction = 1000
 @export var gravity = 980
 
@@ -24,10 +24,13 @@ extends CharacterBody2D
 @export var walljump_initial_horizontal_speed = -500
 @export var wallslide_speed = 200
 
-enum State { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK }
+@export var ladder_dismount_velocity = Vector2(-1000, -1000)
+@export var climb_speed = 500
+
+enum State { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK, CLIMBING }
 var animation_state := State.IDLE
 var direction
-
+var on_ladder := false
 var has_double_jump = false
 
 func _ready():
@@ -128,27 +131,59 @@ func play_animation():
 		_animated_sprite.play("CROUCH_IDLE")
 
 func _rollback_tick(delta, _tick, _is_fresh):
-	if is_wall_sliding() :
-		velocity.y = wallslide_speed
-	else:
-		if Input.is_action_pressed("down"):
-			velocity.y += fastfall_multiplier * gravity * delta
+	if animation_state != State.CLIMBING:
+		if is_wall_sliding() :
+			velocity.y = wallslide_speed
 		else:
-			velocity.y += gravity * delta
-	
-	direction = input.horizontal_direction
-	if direction != 0:
-		apply_acceleration()
-	else:
-		apply_friction()
+			if Input.is_action_pressed("down"):
+				velocity.y += fastfall_multiplier * gravity * delta
+			else:
+				velocity.y += gravity * delta
+		
+		direction = input.horizontal_direction
+		if direction != 0:
+			apply_acceleration()
+		else:
+			apply_friction()
 
-	handle_jump()
-	handle_double_jump()
-	handle_wall_jump()
-	
-	if velocity.x != 0:
-		animation_state = State.RUNNING
+		handle_jump()
+		handle_double_jump()
+		handle_wall_jump()
+		
+		
+		
+		if velocity.x != 0:
+			animation_state = State.RUNNING
+			
+		if can_climb_ladder():
+			animation_state = State.CLIMBING
+		
+	else:
+		velocity.x = 0
+		velocity.y = 0
+		if input.horizontal_direction != 0:
+			animation_state = State.RUNNING
+			has_double_jump = true
+			velocity = Vector2(
+				-1 * ladder_dismount_velocity.x * input.horizontal_direction, 
+				ladder_dismount_velocity.y
+			)
+		if input.is_holding_down:
+			velocity.y =  climb_speed
+		if input.is_holding_up:
+			velocity.y = -1 * climb_speed
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
 	play_animation.rpc()
+
+func can_climb_ladder() -> bool:
+	return on_ladder and Input.is_action_pressed("interact")
+
+func _on_ladder_checker_body_entered(body):
+	print(body)
+	on_ladder = true
+
+
+func _on_ladder_checker_body_exited(body):
+	on_ladder = false
