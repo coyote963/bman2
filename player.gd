@@ -1,7 +1,7 @@
 extends CharacterBody2D
 @onready var _rightRaycast = $RightWalljumpRaycast
 @onready var _leftRaycast = $LeftWalljumpRaycast
-@onready var _animated_sprite = $AnimatedSprite2D
+@onready var _animated_sprite = $PlayerAnimation
 
 @export var input: PlayerInput
 
@@ -10,6 +10,7 @@ extends CharacterBody2D
 @export var gravity = 980
 
 # Horizontal speed
+@export var crouch_penalty = 0.5
 @export var air_max_speed = 800
 @export var air_acceleration = 80
 @export var ground_max_speed = 800
@@ -23,10 +24,10 @@ extends CharacterBody2D
 @export var walljump_initial_horizontal_speed = -500
 @export var wallslide_speed = 200
 
-enum State { RUNNING, IDLE, JUMPING }
-var animation_state = State.IDLE 
-
+enum State { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK }
+var animation_state := State.IDLE
 var direction
+
 var has_double_jump = false
 
 func _ready():
@@ -81,39 +82,54 @@ func handle_double_jump():
 		velocity.y = jump_initial_speed
 		has_double_jump = false
 
-func apply_acceleration(direction):
+func apply_acceleration():
 	'''Apply acceleration in the direction, assumed to be a unit scalar'''
 	_force_update_is_on_floor()
 	if not is_on_floor():
 		velocity.x = move_toward(velocity.x, direction * air_max_speed, air_acceleration)
 	else:
-		animation_state = State.RUNNING
-		velocity.x = move_toward(velocity.x, direction * ground_max_speed, ground_acceleration)
+		if input.is_holding_down:
+			animation_state = State.CROUCH_WALK
+			velocity.x = move_toward(
+				velocity.x,
+				direction * ground_max_speed * crouch_penalty,
+				ground_acceleration
+			)
+		else:
+			animation_state = State.RUNNING
+			velocity.x = move_toward(
+				velocity.x,
+				direction * ground_max_speed,
+				ground_acceleration
+			)
 
 func apply_friction():
 	_force_update_is_on_floor()
 	if not is_on_floor():
 		velocity.x = move_toward(velocity.x, 0, air_friction)
 	else:
-		animation_state = State.IDLE
+		animation_state = State.CROUCH_IDLE if input.is_holding_down else State.IDLE
 		velocity.x = move_toward(velocity.x, 0, ground_friction)
 
-func _process(_delta):
+
+@rpc("any_peer", "call_local", "unreliable")
+func play_animation():
+	var _is_flipped = input.mouse_coordinates[0] < _animated_sprite.global_position.x
+	_animated_sprite.set_flip_h(_is_flipped)
 	if animation_state == State.IDLE:
 		_animated_sprite.play("IDLE")
 	elif animation_state == State.JUMPING:
 		_animated_sprite.play("JUMPING")
 	elif animation_state == State.RUNNING:
 		_animated_sprite.play("RUNNING")
-	_animated_sprite.set_flip_h(
-		input.mouse_coordinates[0] < _animated_sprite.global_position.x
-	)
-	
-	
+	elif animation_state == State.CROUCH_WALK:
+		_animated_sprite.play("CROUCH_WALK")
+	elif animation_state == State.CROUCH_IDLE:
+		_animated_sprite.play("CROUCH_IDLE")
 
-func _rollback_tick(delta, tick, is_fresh):
+func _rollback_tick(delta, _tick, _is_fresh):
 	if is_wall_sliding() :
-		velocity.y = 200
+		velocity.y = wallslide_speed
 	else:
 		if Input.is_action_pressed("down"):
 			velocity.y += fastfall_multiplier * gravity * delta
@@ -122,7 +138,7 @@ func _rollback_tick(delta, tick, is_fresh):
 	
 	direction = input.horizontal_direction
 	if direction != 0:
-		apply_acceleration(direction)
+		apply_acceleration()
 	else:
 		apply_friction()
 
@@ -130,6 +146,9 @@ func _rollback_tick(delta, tick, is_fresh):
 	handle_double_jump()
 	handle_wall_jump()
 	
+	if velocity.x != 0:
+		animation_state = State.RUNNING
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
+	play_animation.rpc()
