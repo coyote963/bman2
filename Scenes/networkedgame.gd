@@ -25,7 +25,6 @@ func _ready():
 	create_player(Network.unique_id, default_pos)
 
 func handle_host():
-	print("Handle HOst")
 	create_player(1, default_pos)
 
 func _handle_connected(id: int):
@@ -46,6 +45,7 @@ func create_player(id, pos):
 	# Avatar's input object is owned by player
 	var input = p.find_child("PlayerInput")
 	if input != null:
+		#p.find_child("PlayerAnimation").set_multiplayer_authority(id)
 		input.set_multiplayer_authority(id)
 		print("%s: Set %s's ownership to %s" % [multiplayer.get_unique_id(), p.name, id])
 
