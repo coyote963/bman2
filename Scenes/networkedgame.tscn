@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://nt17qfukiu00"]
+[gd_scene load_steps=6 format=3 uid="uid://nt17qfukiu00"]
 
 [ext_resource type="Script" path="res://Scenes/networkedgame.gd" id="1_0syg2"]
 [ext_resource type="Texture2D" uid="uid://c0wade07cia2k" path="res://icon.svg" id="2_wrmq2"]
+[ext_resource type="PackedScene" uid="uid://c4or2blt3y28m" path="res://Game/Objects/physical_object.tscn" id="3_ust4o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x65i2"]
 texture = ExtResource("2_wrmq2")
@@ -42,3 +43,9 @@ position = Vector2(1270, -33)
 
 [node name="4" type="Marker2D" parent="Spawnpoints"]
 position = Vector2(509, -1)
+
+[node name="PhysicalObject" parent="." instance=ExtResource("3_ust4o")]
+position = Vector2(188, 120)
+
+[node name="PhysicalObject2" parent="." instance=ExtResource("3_ust4o")]
+position = Vector2(298, 86)
