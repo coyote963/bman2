@@ -188,7 +188,8 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
-
+		# Crouch Walk
+		# This is an example of a commit
 		MovementState.CROUCH_WALK:
 			if direction != 0:
 				velocity.x = move_toward(

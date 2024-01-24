@@ -11,6 +11,7 @@ var interact := [false, false, false ]
 var mouse_coordinates = Vector2.ZERO
 
 class InputBuffer:
+	# Add base class for movement keys
 	var _queues = {}
 	var _ptr = 0
 	var _queue_size : int
