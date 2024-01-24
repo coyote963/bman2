@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0okl2t26t6kw"]
+
+[ext_resource type="Script" path="res://Game/Projectiles/projectile.gd" id="1_pewvj"]
+
+[node name="Projectile" type="RayCast2D"]
+script = ExtResource("1_pewvj")

@@ -5,6 +5,7 @@ extends CharacterBody2D
 
 @export var input: PlayerInput
 
+@export var use_global_gravity : bool = true
 @export var gravity = 980
 @export var acceleration = 500
 @export var max_speed = 1500
@@ -21,7 +22,8 @@ var has_double_jump = false
 
 func _ready():
 	
-	gravity = Globals.gravity
+	if use_global_gravity:
+		gravity = Globals.gravity
 	
 	$IDLabel.text = name
 	if input == null:
