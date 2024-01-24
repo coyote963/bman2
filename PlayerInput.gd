@@ -2,30 +2,63 @@ extends Node
 class_name PlayerInput
 
 ## Base class for Input nodes used with rollback.
+@export var queue_size : int
 
-var _is_prev_frame_jump = false
-var is_jump_just_pressed = false
-var is_holding_up = false
-var is_jump_just_released = false
-var horizontal_direction = 1
-var is_interacting = false
-var is_holding_down = false
+var direction = Vector2.ZERO
+var down := [false, false, false ]
+var jump := [false, false, false ]
+var interact := [false, false, false ]
 var mouse_coordinates = Vector2.ZERO
+
+class InputBuffer:
+	var _queues = {}
+	var _ptr = 0
+	var _queue_size : int
+	var _action_names := []
+	
+	func _init(queue_size, action_names):
+		self._action_names = action_names
+		for an in action_names:
+			self._queue_size = queue_size
+			self._queues[an] = []
+			self._queues[an].resize(queue_size)
+			self._queues[an].fill(false)
+	
+	func update_tick():
+		print(_queues)
+		self._ptr = (self._ptr + 1) % self._queue_size
+		for an in self._action_names:
+			self._queues[an][self._ptr] = Input.is_action_pressed(an)
+	
+	func get_state(an):
+		# Returns [just_pressed, is_pressed, just_released]
+		return [
+			self._queues[an][self._ptr] and not self._queues[an][self._ptr - 1 % self._queue_size],
+			self._queues[an][self._ptr],
+			not self._queues[an][self._ptr] and self._queues[an][self._ptr - 1 % self._queue_size]
+		]
 
 func _ready():
 	NetworkTime.before_tick_loop.connect(_gather)
 
-func get_horizontal_axis() -> float:
-	return Input.get_axis("move_left", "move_right")
+func get_axis() -> Vector2:
+	return Vector2(
+		Input.get_axis("move_left", "move_right"),
+		Input.get_axis("down", "jump")
+	)
+
+var input_buffer = InputBuffer.new(10, [
+	"down",
+	"jump",
+	"interact"
+])
 
 func _gather():
 	if not is_multiplayer_authority():
 		return
-	is_jump_just_pressed = Input.is_action_pressed("jump") and not _is_prev_frame_jump
-	is_holding_up = Input.is_action_pressed("jump")
-	is_jump_just_released = _is_prev_frame_jump and not Input.is_action_pressed("jump") 
-	is_holding_down = Input.is_action_pressed("down")
-	is_interacting = Input.is_action_pressed("interact")
-	horizontal_direction = get_horizontal_axis()
-	_is_prev_frame_jump = Input.is_action_pressed("jump")
+	input_buffer.update_tick()
+	direction = get_axis()
+	down = input_buffer.get_state("down")
+	jump = input_buffer.get_state("jump")
+	interact = input_buffer.get_state("interact")
 	mouse_coordinates = owner.get_global_mouse_position()
