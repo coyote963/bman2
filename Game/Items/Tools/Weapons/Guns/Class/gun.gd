@@ -14,4 +14,4 @@ func _ready():
 func _can_fire():
 	if ammo <= 0:
 		return false
-	super._can_fire() #check if cooldown is done
+	return super._can_fire() #check if cooldown is done

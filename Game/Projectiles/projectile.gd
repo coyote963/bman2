@@ -25,4 +25,8 @@ func _process(delta):
 	
 	if is_colliding():
 		print("collision at " + str(get_collision_point()))
+		global_position = get_collision_point()
+		velocity = Vector2.ZERO
 		queue_free()
+	
+	$DebugTracer.points = [Vector2.ZERO, old_position - global_position]

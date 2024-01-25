@@ -31,7 +31,8 @@ func _spawn() -> Node2D:
 	var p = projectile.instantiate()
 	Network.game.world.add_child(p, true)
 	p.fired_by = get_parent().get_parent()
-	p.velocity = Vector2(projectile_speed, 0).rotated(rotation) #set projectile velocity to projectile_speed rotated by the gun's rotation in radians
+	p.global_position = get_node("Muzzle").global_position
+	p.velocity = Vector2(projectile_speed, 0).rotated(global_rotation) #set projectile velocity to projectile_speed rotated by the gun's rotation in radians
 	
 	return p
 
