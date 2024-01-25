@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=13 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://b5083cr1s4hk2" path="res://guy_with_feet.png" id="2_vputq"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="3_b2fi1"]
 [ext_resource type="Script" path="res://Hands.gd" id="5_o8p22"]
 [ext_resource type="PackedScene" uid="uid://cv0mw24kpj4wu" path="res://Game/Items/Tools/Weapons/Guns/rifle.tscn" id="6_iwmrk"]
+[ext_resource type="PackedScene" uid="uid://b0okl2t26t6kw" path="res://Game/Projectiles/projectile.tscn" id="7_lopnx"]
 [ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
 [ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
@@ -55,6 +56,7 @@ script = ExtResource("5_o8p22")
 input = NodePath("../PlayerInput")
 
 [node name="Rifle" parent="Hands" node_paths=PackedStringArray("input") instance=ExtResource("6_iwmrk")]
+projectile = ExtResource("7_lopnx")
 input = NodePath("../../PlayerInput")
 
 [node name="IDLabel" type="Label" parent="."]

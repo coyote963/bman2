@@ -16,7 +16,7 @@ func _ready():
 func _process(delta):
 	var old_position = global_position #record position from last frame
 	
-	velocity.y += gravity * gravity_affect
+	velocity.y += gravity * gravity_affect * delta
 	global_position += velocity * delta #move the projectile
 	
 	target_position = old_position - global_position #cast the ray from our current position to our last position in local space
@@ -25,3 +25,4 @@ func _process(delta):
 	
 	if is_colliding():
 		print("collision at " + str(get_collision_point()))
+		queue_free()

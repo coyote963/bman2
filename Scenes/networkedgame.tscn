@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://nt17qfukiu00"]
+[gd_scene load_steps=7 format=3 uid="uid://nt17qfukiu00"]
 
 [ext_resource type="Script" path="res://Scenes/networkedgame.gd" id="1_0syg2"]
 [ext_resource type="Texture2D" uid="uid://c0wade07cia2k" path="res://icon.svg" id="2_wrmq2"]
 [ext_resource type="PackedScene" uid="uid://c4or2blt3y28m" path="res://Game/Objects/physical_object.tscn" id="3_ust4o"]
+[ext_resource type="PackedScene" uid="uid://b0okl2t26t6kw" path="res://Game/Projectiles/projectile.tscn" id="4_7bqxl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x65i2"]
 texture = ExtResource("2_wrmq2")
@@ -49,3 +50,12 @@ position = Vector2(188, 120)
 
 [node name="PhysicalObject2" parent="." instance=ExtResource("3_ust4o")]
 position = Vector2(298, 86)
+
+[node name="Projectile" parent="." instance=ExtResource("4_7bqxl")]
+position = Vector2(268, 1)
+
+[node name="Projectile2" parent="." instance=ExtResource("4_7bqxl")]
+position = Vector2(385, -76)
+
+[node name="Projectile3" parent="." instance=ExtResource("4_7bqxl")]
+position = Vector2(408, -82)
