@@ -16,6 +16,18 @@ enum firemodes {
 
 var last_fired: int = -1
 
+func _is_reconcilable(p,rd,ld): #projectile, request data, local data
+	return true
+
+#func _reconcile(p,ld,rd): #projectile, local data, remote data
+	#var local_transform = ld["global_transform"] as Transform2D
+	##var remote_transform = rd["global_transform"] as Transform2D
+##
+	##var relative_transform = projectile.global_transform * local_transform.inverse()
+	##var final_transform = remote_transform * relative_transform
+#
+	#p.global_transform = local_transform
+
 func _ready():
 	NetworkTime.on_tick.connect(_tick)
 
