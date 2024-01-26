@@ -8,32 +8,35 @@ extends CharacterBody2D
 
 @export var air_friction = 200
 @export var ground_friction = 1000
-@export var gravity = 980
+@export var gravity = 3000
 
 # Horizontal speed
-@export var crouch_penalty = 0.5
-@export var air_max_speed = 800
-@export var air_acceleration = 80
-@export var ground_max_speed = 800
+@export var crouch_penalty = 0.2
+@export var air_max_speed = 1200
+@export var air_acceleration = 150
+@export var ground_max_speed = 1000
 @export var ground_acceleration = 150
 
-@export var double_jump_initial_speed = -600
-@export var jump_initial_speed = -700
-@export var fastfall_multiplier = 3
+@export var double_jump_initial_speed = -1000
+@export var jump_initial_speed = -1000
+@export var fastfall_multiplier = 2
 @export var jump_release_slowdown = 0.7
 
-@export var walljump_initial_vertical_speed = -700
-@export var walljump_initial_horizontal_speed = -500
+@export var walljump_initial_vertical_speed = -1400
+@export var walljump_initial_horizontal_speed = -700
 @export var wallslide_friction = 0.4
 
-@export var ladder_dismount_velocity = Vector2(-500, -600)
+@export var ladder_dismount_velocity = Vector2(-1000, -1000)
 @export var climb_speed = 500
+@export var roll_multiplier = 2
+@export var roll_duration = 0.3
 
-enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK, CLIMBING, WALL_SLIDE }
+enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK, CLIMBING, WALL_SLIDE, ROLLING }
 var movement_state := MovementState.IDLE
 var direction
 var on_ladder := false
 var has_double_jump = false
+var roll_timer : SceneTreeTimer
 
 func _ready():
 	$IDLabel.text = name
@@ -49,6 +52,15 @@ func _force_update_is_on_floor():
 	move_and_slide()
 	velocity = old_velocity
 
+func _on_rolling_timer_timeout() -> void:
+	if movement_state == MovementState.ROLLING:
+		movement_state = MovementState.IDLE
+
+func _create_rolling_timer(duration):
+	var timer = get_tree().create_timer(duration)
+	#timer.connect("timeout", timer, "_on_rolling_timer_timeout")
+	#timer.start()
+
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation():
 	var _is_flipped = input.mouse_coordinates[0] < _animated_sprite.global_position.x
@@ -63,6 +75,10 @@ func play_animation():
 		_animated_sprite.play("CROUCH_WALK")
 	elif movement_state == MovementState.CROUCH_IDLE:
 		_animated_sprite.play("CROUCH_IDLE")
+	elif movement_state == MovementState.ROLLING:
+		_animated_sprite.play("CROUCH_WALK")
+	elif movement_state == MovementState.CLIMBING:
+		_animated_sprite.play("CLIMBING")
 
 func clamp_to_ladder():
 	var bodies = ladder_checker.get_overlapping_bodies()
@@ -115,8 +131,11 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
-			if input.down[1]:
-				movement_state = MovementState.CROUCH_IDLE
+			if input.down[0]:
+				velocity.x *= roll_multiplier 
+				movement_state = MovementState.ROLLING
+				roll_timer = get_tree().create_timer(roll_duration)
+				roll_timer.timeout.connect(_on_rolling_timer_timeout)
 		
 		MovementState.JUMPING:
 			if input.down[1]:
@@ -140,7 +159,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity.y *= jump_release_slowdown
 			if input.jump[0] and has_double_jump:
 				has_double_jump = false
-				velocity.y = double_jump_initial_speed
+				velocity.y += double_jump_initial_speed
 		
 		MovementState.WALL_SLIDE:
 			if input.down[1]:
@@ -169,15 +188,16 @@ func _rollback_tick(delta, _tick, _is_fresh):
 					)
 				movement_state = MovementState.JUMPING
 		MovementState.CLIMBING:
-			
 			if direction != 0:
 				velocity = Vector2(direction * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
 				movement_state = MovementState.JUMPING
-			else:
+			elif on_ladder:
 				velocity.y = (
 					int(input.down[1]) * climb_speed - 
 					int(input.jump[1]) * climb_speed
 				)
+			else:
+				velocity.y = 0
 
 		MovementState.CROUCH_IDLE:
 			if direction != 0:
@@ -188,8 +208,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
-		# Crouch Walk
-		# This is when the player is walking while crouching
+			
 		MovementState.CROUCH_WALK:
 			if direction != 0:
 				velocity.x = move_toward(
@@ -205,7 +224,15 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if input.jump[0]:
 				velocity.y = jump_initial_speed * delta
 				movement_state = MovementState.JUMPING
-
+		
+		MovementState.ROLLING:
+			if input.down[1]:
+				velocity.y += gravity * fastfall_multiplier * delta
+			else:
+				velocity.y += gravity * delta
+			if can_climb_ladder():
+				clamp_to_ladder()
+				movement_state = MovementState.CLIMBING
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor

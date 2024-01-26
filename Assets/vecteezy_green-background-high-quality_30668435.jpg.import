@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dga61ipc1klvs"
-path="res://.godot/imported/Run.png-22c86201c3f676abf4b682a2672e86b7.ctex"
+uid="uid://cw616om8pc8qw"
+path="res://.godot/imported/vecteezy_green-background-high-quality_30668435.jpg-d896c3678ebf4bfad49322b9ed4e336a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Run/Run.png"
-dest_files=["res://.godot/imported/Run.png-22c86201c3f676abf4b682a2672e86b7.ctex"]
+source_file="res://Assets/vecteezy_green-background-high-quality_30668435.jpg"
+dest_files=["res://.godot/imported/vecteezy_green-background-high-quality_30668435.jpg-d896c3678ebf4bfad49322b9ed4e336a.ctex"]
 
 [params]
 
