@@ -1,13 +1,13 @@
-[gd_scene load_steps=40 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=49 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://d2y1eeeoq0wtd" path="res://Assets/Climb/Ladder_Climbing.png" id="2_5qudx"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
-[ext_resource type="Texture2D" uid="uid://4vs0gtd4dpjy" path="res://Assets/Crouch Idle/toleedeath3.png" id="3_x2fhi"]
 [ext_resource type="Texture2D" uid="uid://cxpgc4n7cnlq1" path="res://Assets/Jump/Jump.png" id="3_ya2am"]
 [ext_resource type="Script" path="res://Sprite2D.gd" id="4_a8brg"]
 [ext_resource type="Texture2D" uid="uid://c8xdn3u0b5qo" path="res://M4_alt.png" id="4_ssa6y"]
 [ext_resource type="Texture2D" uid="uid://c0mtwu7ra1o5k" path="res://Assets/Run/Walk_Stik.png" id="5_4fe47"]
+[ext_resource type="Texture2D" uid="uid://drt7gn2gvnu0j" path="res://Assets/Roll/Roll_resize.png" id="5_h2bbj"]
 [ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
 [ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
@@ -48,9 +48,21 @@ region = Rect2(896, 0, 128, 128)
 atlas = ExtResource("2_5qudx")
 region = Rect2(1024, 0, 128, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_bmloa"]
-atlas = ExtResource("3_ya2am")
-region = Rect2(0, 0, 128, 128)
+[sub_resource type="AtlasTexture" id="AtlasTexture_ei8m8"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xwwyc"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lxjv3"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i12g"]
+atlas = ExtResource("5_4fe47")
+region = Rect2(512, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2obbk"]
 atlas = ExtResource("3_ya2am")
@@ -63,6 +75,34 @@ region = Rect2(128, 0, 128, 128)
 [sub_resource type="AtlasTexture" id="AtlasTexture_gre7b"]
 atlas = ExtResource("3_ya2am")
 region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ayg8k"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pie01"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dx8k3"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_68u25"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sj5dt"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6ros"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(1024, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xpfd3"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(1152, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mtdef"]
 atlas = ExtResource("5_4fe47")
@@ -79,10 +119,6 @@ region = Rect2(256, 0, 128, 128)
 [sub_resource type="AtlasTexture" id="AtlasTexture_t7qda"]
 atlas = ExtResource("5_4fe47")
 region = Rect2(384, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1i12g"]
-atlas = ExtResource("5_4fe47")
-region = Rect2(512, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7h4st"]
 atlas = ExtResource("5_4fe47")
@@ -140,7 +176,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_x2fhi")
+"texture": SubResource("AtlasTexture_ei8m8")
 }],
 "loop": true,
 "name": &"CROUCH_IDLE",
@@ -148,7 +184,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_x2fhi")
+"texture": SubResource("AtlasTexture_xwwyc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ei8m8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lxjv3")
 }],
 "loop": true,
 "name": &"CROUCH_WALK",
@@ -156,7 +198,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_bmloa")
+"texture": SubResource("AtlasTexture_1i12g")
 }],
 "loop": true,
 "name": &"IDLE",
@@ -174,6 +216,41 @@ animations = [{
 }],
 "loop": false,
 "name": &"JUMPING",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ayg8k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pie01")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dx8k3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_68u25")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sj5dt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xwwyc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ei8m8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lxjv3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f6ros")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xpfd3")
+}],
+"loop": true,
+"name": &"ROLLING",
 "speed": 20.0
 }, {
 "frames": [{
@@ -231,12 +308,14 @@ collision_layer = 8
 script = ExtResource("1_rhoob")
 input = NodePath("PlayerInput")
 ladder_checker = NodePath("LadderChecker")
+wallslide_friction = 0.01
+roll_speed = 1400
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="."]
-position = Vector2(2, 2.84217e-14)
-scale = Vector2(0.84375, 1.0625)
+position = Vector2(8, 8)
+scale = Vector2(0.777222, 0.9043)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
-animation = &"CLIMBING"
+animation = &"IDLE"
 autoplay = "IDLE"
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
@@ -270,7 +349,7 @@ horizontal_alignment = 1
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("8_aqte3")
 root = NodePath("..")
-state_properties = Array[String]([":global_position", ":velocity", ":movement_state"])
+state_properties = Array[String]([":global_position", ":velocity", ":movement_state", ":has_double_jump"])
 input_properties = Array[String](["PlayerInput:mouse_coordinates", "PlayerInput:down", "PlayerInput:jump", "PlayerInput:interact", "PlayerInput:direction"])
 
 [node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
