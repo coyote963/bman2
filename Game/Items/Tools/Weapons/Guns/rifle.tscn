@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cv0mw24kpj4wu"]
+
+[ext_resource type="Texture2D" uid="uid://c8xdn3u0b5qo" path="res://M4_alt.png" id="1_o78hr"]
+[ext_resource type="Script" path="res://Game/Items/Tools/Weapons/Guns/rifle.gd" id="1_vg61j"]
+
+[node name="Rifle" type="Node2D"]
+script = ExtResource("1_vg61j")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(17, -1)
+texture = ExtResource("1_o78hr")
+
+[node name="Muzzle" type="Marker2D" parent="."]
+position = Vector2(65, -6)

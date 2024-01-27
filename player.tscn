@@ -1,0 +1,83 @@
+[gd_scene load_steps=13 format=3 uid="uid://s7nbd7fg7l3k"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
+[ext_resource type="Texture2D" uid="uid://b5083cr1s4hk2" path="res://guy_with_feet.png" id="2_vputq"]
+[ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
+[ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="3_b2fi1"]
+[ext_resource type="Script" path="res://Hands.gd" id="5_o8p22"]
+[ext_resource type="PackedScene" uid="uid://cv0mw24kpj4wu" path="res://Game/Items/Tools/Weapons/Guns/rifle.tscn" id="6_iwmrk"]
+[ext_resource type="PackedScene" uid="uid://b0okl2t26t6kw" path="res://Game/Projectiles/projectile.tscn" id="7_lopnx"]
+[ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
+[ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
+[ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xaeb6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vputq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jywao"]
+size = Vector2(38, 128)
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("input")]
+collision_layer = 2
+script = ExtResource("1_rhoob")
+input = NodePath("PlayerInput")
+walljump_initial_horizontal_speed = -400
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_xaeb6")
+script = ExtResource("3_b2fi1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jywao")
+
+[node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
+position = Vector2(15, 0)
+target_position = Vector2(24, 0)
+
+[node name="LeftWalljumpRaycast" type="RayCast2D" parent="."]
+position = Vector2(-13, 0)
+target_position = Vector2(-24, 0)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+position_smoothing_enabled = true
+script = ExtResource("3_8bmha")
+
+[node name="Hands" type="Node2D" parent="." node_paths=PackedStringArray("input")]
+script = ExtResource("5_o8p22")
+input = NodePath("../PlayerInput")
+
+[node name="Rifle" parent="Hands" node_paths=PackedStringArray("input") instance=ExtResource("6_iwmrk")]
+projectile = ExtResource("7_lopnx")
+input = NodePath("../../PlayerInput")
+
+[node name="IDLabel" type="Label" parent="."]
+offset_left = -103.0
+offset_top = -87.0
+offset_right = 103.0
+offset_bottom = -64.0
+pivot_offset = Vector2(103, -1)
+text = "unique_id"
+horizontal_alignment = 1
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("8_aqte3")
+root = NodePath("..")
+state_properties = Array[String]([":global_position", ":velocity"])
+input_properties = Array[String](["PlayerInput:is_jump_just_pressed", "PlayerInput:is_jump_just_released", "PlayerInput:horizontal_direction", "PlayerInput:is_holding_down", "PlayerInput:mouse_coordinates"])
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("9_18a01")
+root = NodePath("..")
+properties = Array[String]([":global_position"])
+
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("9_63hcw")

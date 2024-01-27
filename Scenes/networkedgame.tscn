@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://nt17qfukiu00"]
+
+[ext_resource type="Script" path="res://Scenes/networkedgame.gd" id="1_0syg2"]
+[ext_resource type="Texture2D" uid="uid://c0wade07cia2k" path="res://icon.svg" id="2_wrmq2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x65i2"]
+texture = ExtResource("2_wrmq2")
+texture_region_size = Vector2i(128, 128)
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+
+[sub_resource type="TileSet" id="TileSet_1ckjw"]
+tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_x65i2")
+
+[node name="NetworkedGame" type="Node" node_paths=PackedStringArray("players")]
+script = ExtResource("1_0syg2")
+players = NodePath("Players")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="map" type="TileMap" parent="World"]
+tile_set = SubResource("TileSet_1ckjw")
+format = 2
+layer_0/tile_data = PackedInt32Array(65535, 0, 0, 131071, 0, 0, 196607, 0, 0, 131072, 0, 0, 131073, 0, 0, 131074, 0, 0, 131075, 0, 0, 131076, 0, 0, 131077, 0, 0, 131078, 0, 0, 131079, 0, 0, 131081, 0, 0, 131080, 0, 0, 131082, 0, 0, 12, 0, 0, 131083, 0, 0, 65548, 0, 0, 131084, 0, 0, 196620, 0, 0, 13, 0, 0, 65549, 0, 0, 131085, 0, 0, 196621, 0, 0, 196619, 0, 0, 196618, 0, 0, 196617, 0, 0, 196616, 0, 0, 196615, 0, 0, 196614, 0, 0, 196613, 0, 0, 196612, 0, 0, 196611, 0, 0, 196610, 0, 0, 196609, 0, 0, 196608, 0, 0, 262143, 0, 0, 65534, 0, 0, 131070, 0, 0, 196606, 0, 0, 262142, 0, 0, 131086, 0, 0, 131087, 0, 0, 131088, 0, 0, 131089, 0, 0, 131090, 0, 0, 196622, 0, 0, 196623, 0, 0, 196624, 0, 0, 196625, 0, 0, 196626, 0, 0, 196605, 0, 0, 196604, 0, 0, 196603, 0, 0, 196602, 0, 0, 196601, 0, 0, 262137, 0, 0, 262138, 0, 0, 262139, 0, 0, 262140, 0, 0, 262141, 0, 0, -196603, 0, 0, -196602, 0, 0, -196601, 0, 0, -196600, 0, 0, -196604, 0, 0, -196605, 0, 0, -262141, 0, 0, -262140, 0, 0, -262139, 0, 0, -262138, 0, 0, -262137, 0, 0, -262136, 0, 0, -65540, 0, 0, -131076, 0, 0, -196612, 0, 0, -131057, 0, 0, -196593, 0, 0, -262129, 0, 0)
+
+[node name="Players" type="Node" parent="."]
+
+[node name="Spawnpoints" type="Node" parent="."]
+
+[node name="1" type="Marker2D" parent="Spawnpoints"]
+position = Vector2(196, -6)
+
+[node name="2" type="Marker2D" parent="Spawnpoints"]
+position = Vector2(876, -60)
+
+[node name="3" type="Marker2D" parent="Spawnpoints"]
+position = Vector2(1270, -33)
+
+[node name="4" type="Marker2D" parent="Spawnpoints"]
+position = Vector2(509, -1)
