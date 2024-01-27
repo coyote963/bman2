@@ -13,7 +13,7 @@ extends CharacterBody2D
 # Horizontal speed
 @export var crouch_penalty = 0.2
 @export var air_max_speed = 1200
-@export var max_fall_speed = 200
+@export var max_fall_speed = 1500
 @export var air_acceleration = 150
 @export var ground_max_speed = 1000
 @export var ground_acceleration = 150
@@ -27,11 +27,11 @@ extends CharacterBody2D
 @export var walljump_initial_horizontal_speed = -700
 @export var wallslide_friction = 0.4
 
-@export var ladder_dismount_velocity = Vector2(-1000, -1000)
+@export var ladder_dismount_velocity = Vector2(-700, -1000)
 @export var climb_speed = 500
 @export var crouch_walk_speed = 600
-@export var roll_speed = 500
-@export var roll_duration = 2.0
+@export var roll_speed = 300
+@export var roll_duration = 0.6
 
 enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK, CLIMBING, WALL_SLIDE, ROLLING }
 var movement_state := MovementState.IDLE
@@ -39,6 +39,7 @@ var on_ladder := false
 var has_double_jump = false
 var roll_timer : SceneTreeTimer
 var last_rolled := -1
+var roll = false
 
 func _ready():
 	$IDLabel.text = name
@@ -47,6 +48,7 @@ func _ready():
 	# Wait a single frame, so player spawner has time to set input owner
 	await get_tree().process_frame
 	$RollbackSynchronizer.process_settings()
+	$RollingTimer.wait_time = roll_duration
 
 func _force_update_is_on_floor():
 	var old_velocity = velocity
@@ -54,9 +56,8 @@ func _force_update_is_on_floor():
 	move_and_slide()
 	velocity = old_velocity
 
-func _on_rolling_timer_timeout() -> void:
-	print("timerou!")
-	movement_state = MovementState.IDLE
+func _on_rolling_timer_timeout():
+	roll = false
 
 func _create_rolling_timer(duration):
 	var timer = get_tree().create_timer(duration)
@@ -91,6 +92,7 @@ func clamp_to_ladder():
 
 func _rollback_tick(delta, _tick, _is_fresh):
 	_force_update_is_on_floor()
+	$State.text = MovementState.keys()[movement_state]
 	match movement_state:
 		MovementState.IDLE:
 			if input.direction.x == 0 and is_on_floor():
@@ -133,10 +135,11 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
 			if input.down[0]:
-				velocity.x = roll_speed * velocity.x / abs(velocity.x)
+				velocity.x = roll_speed * (velocity.x / abs(velocity.x))
 				last_rolled = NetworkTime.tick
 				movement_state = MovementState.ROLLING
-				
+				roll = true
+				$RollingTimer.start()
 				
 				#get_tree().create_timer(roll_duration).timeout.connect(func():
 					#movement_state = MovementState.IDLE
@@ -198,6 +201,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 						walljump_initial_vertical_speed
 					)
 				movement_state = MovementState.JUMPING
+				
 		MovementState.CLIMBING:
 			if input.direction.x != 0:
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
@@ -208,8 +212,8 @@ func _rollback_tick(delta, _tick, _is_fresh):
 					int(input.jump[1]) * climb_speed
 				)
 			else:
-				velocity.y = jump_initial_speed
-				#movement_state = MovementState.JUMPING
+				velocity.y = 0
+				movement_state = MovementState.JUMPING
 
 		MovementState.CROUCH_IDLE:
 			if input.direction.x != 0:
@@ -226,7 +230,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		MovementState.CROUCH_WALK:
 			velocity.x = move_toward(
 				velocity.x,
-				direction * ground_max_speed * crouch_penalty,
+				input.direction.x * ground_max_speed * crouch_penalty,
 				ground_acceleration
 			)
 			if not is_on_floor():
@@ -246,11 +250,12 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity.y += gravity * fastfall_multiplier * delta
 			else:
 				velocity.y += gravity * delta
-			if input.jump[0]:
+			if input.jump[0] or !roll:
 				movement_state = MovementState.JUMPING
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
+		
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
@@ -263,4 +268,7 @@ func _on_ladder_checker_body_entered(body):
 	on_ladder = true
 
 func _on_ladder_checker_body_exited(body):
+	if on_ladder:
+		velocity.y = 0
+		movement_state = MovementState.JUMPING
 	on_ladder = false

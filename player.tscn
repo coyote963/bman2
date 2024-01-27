@@ -289,9 +289,6 @@ animations = [{
 "speed": 20.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jywao"]
-size = Vector2(38, 128)
-
 [sub_resource type="Animation" id="Animation_f8j6p"]
 resource_name = "CROUCH"
 
@@ -299,6 +296,9 @@ resource_name = "CROUCH"
 _data = {
 "CROUCH": SubResource("Animation_f8j6p")
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jywao"]
+size = Vector2(38, 128)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvb7j"]
 size = Vector2(48, 64)
@@ -315,7 +315,7 @@ roll_speed = 1400
 position = Vector2(8, 8)
 scale = Vector2(0.777222, 0.9043)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
-animation = &"IDLE"
+animation = &"ROLLING"
 autoplay = "IDLE"
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
@@ -338,12 +338,19 @@ script = ExtResource("4_a8brg")
 input = NodePath("../../PlayerInput")
 
 [node name="IDLabel" type="Label" parent="."]
-offset_left = -103.0
-offset_top = -87.0
-offset_right = 103.0
-offset_bottom = -64.0
-pivot_offset = Vector2(103, -1)
+offset_left = -64.0
+offset_top = -112.0
+offset_right = 64.0
+offset_bottom = -89.0
+pivot_offset = Vector2(64, 0)
 text = "unique_id"
+horizontal_alignment = 1
+
+[node name="State" type="Label" parent="."]
+offset_left = -24.0
+offset_top = -88.0
+offset_right = 24.0
+offset_bottom = -65.0
 horizontal_alignment = 1
 
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
@@ -360,13 +367,13 @@ properties = Array[String]([":global_position", ":velocity"])
 [node name="PlayerInput" type="Node" parent="."]
 script = ExtResource("9_63hcw")
 
-[node name="EnvironmentCollision" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_jywao")
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_c1gkv")
 }
+
+[node name="EnvironmentCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jywao")
 
 [node name="LadderChecker" type="Area2D" parent="."]
 collision_layer = 0
@@ -375,5 +382,10 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LadderChecker"]
 shape = SubResource("RectangleShape2D_cvb7j")
 
+[node name="RollingTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
 [connection signal="body_entered" from="LadderChecker" to="." method="_on_ladder_checker_body_entered"]
 [connection signal="body_exited" from="LadderChecker" to="." method="_on_ladder_checker_body_exited"]
+[connection signal="timeout" from="RollingTimer" to="." method="_on_rolling_timer_timeout"]
