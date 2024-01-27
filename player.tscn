@@ -301,7 +301,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvb7j"]
-size = Vector2(48, 92)
+size = Vector2(48, 64)
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("input", "ladder_checker") groups=["CanClimb"]]
 collision_layer = 8
