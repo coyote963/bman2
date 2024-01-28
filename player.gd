@@ -6,6 +6,10 @@ extends CharacterBody2D
 @export var input: PlayerInput
 @export var ladder_checker: Area2D
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c808e56efa08a9b9ab38ce75e6648931595eed7d
 @export var air_friction = 200
 @export var ground_friction = 1000
 @export var gravity = 3000
@@ -61,9 +65,7 @@ func _force_update_is_on_floor():
 	velocity = old_velocity
 
 func _on_rolling_timer_timeout():
-	print("roll timeout")
 	is_rolling = false
-
 
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation():
@@ -231,9 +233,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		MovementState.CROUCH_IDLE:
 			if input.direction.x != 0:
 				movement_state = MovementState.CROUCH_WALK
-			if input.down[2]: #Just Released
-				velocity.y = jump_initial_speed * delta
-				movement_state = MovementState.JUMPING
 			if not is_on_floor():
 				movement_state = MovementState.JUMPING
 			if not input.down[1]:

@@ -1,4 +1,6 @@
+
 [gd_scene load_steps=13 format=3 uid="uid://s7nbd7fg7l3k"]
+
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://d2y1eeeoq0wtd" path="res://Assets/Climb/Ladder_Climbing.png" id="2_5qudx"]
@@ -316,7 +318,7 @@ scale = Vector2(0.777222, 0.9043)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
 animation = &"RUNNING"
 autoplay = "IDLE"
-frame_progress = 0.953725
+frame_progress = 0.97732
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
 position = Vector2(1, 0)
