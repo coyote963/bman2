@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dby81wrvmglyt"
-path="res://.godot/imported/Walk_Stik.png-481030c4abf738a83e27d67363472a09.ctex"
+uid="uid://dvu7ov4wgvqcs"
+path="res://.godot/imported/Wallslide.png-fd376c551eb4f326c07295c68cd999ac.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Crouch Idle/Walk_Stik.png"
-dest_files=["res://.godot/imported/Walk_Stik.png-481030c4abf738a83e27d67363472a09.ctex"]
+source_file="res://Assets/Wallslide/Wallslide.png"
+dest_files=["res://.godot/imported/Wallslide.png-fd376c551eb4f326c07295c68cd999ac.ctex"]
 
 [params]
 

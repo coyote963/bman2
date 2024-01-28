@@ -1,15 +1,21 @@
-[gd_scene load_steps=49 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=55 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://d2y1eeeoq0wtd" path="res://Assets/Climb/Ladder_Climbing.png" id="2_5qudx"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
+[ext_resource type="Texture2D" uid="uid://dby81wrvmglyt" path="res://Assets/Crouch Idle/Crouch_Idle.png" id="3_sapvr"]
 [ext_resource type="Texture2D" uid="uid://cxpgc4n7cnlq1" path="res://Assets/Jump/Jump.png" id="3_ya2am"]
+[ext_resource type="Texture2D" uid="uid://3l0rhrxf1o3h" path="res://Assets/Jump/Crouch_Jump.png" id="4_0uget"]
+[ext_resource type="Texture2D" uid="uid://coiuuqco711oa" path="res://Assets/Climb/Ladder Hanging.png" id="5_3lck2"]
 [ext_resource type="Texture2D" uid="uid://c0mtwu7ra1o5k" path="res://Assets/Run/Walk_Stik.png" id="5_4fe47"]
 [ext_resource type="Texture2D" uid="uid://drt7gn2gvnu0j" path="res://Assets/Roll/Roll_resize.png" id="5_h2bbj"]
+[ext_resource type="Texture2D" uid="uid://fbw1wycrl1as" path="res://Assets/Idle/Idle.png" id="6_01ncj"]
 [ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
+[ext_resource type="Texture2D" uid="uid://b402ww5xpx37e" path="res://Assets/Jump/inAir_Down.png" id="8_rjp1w"]
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
 [ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
 [ext_resource type="Script" path="res://Hands.gd" id="10_1f8yc"]
+[ext_resource type="Texture2D" uid="uid://dvu7ov4wgvqcs" path="res://Assets/Wallslide/Wallslide.png" id="10_xlvdk"]
 [ext_resource type="PackedScene" uid="uid://cv0mw24kpj4wu" path="res://Game/Items/Tools/Weapons/Guns/rifle.tscn" id="11_ksv3v"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2tjs1"]
@@ -48,21 +54,17 @@ region = Rect2(896, 0, 128, 128)
 atlas = ExtResource("2_5qudx")
 region = Rect2(1024, 0, 128, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ei8m8"]
-atlas = ExtResource("5_h2bbj")
-region = Rect2(768, 0, 128, 128)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_xwwyc"]
 atlas = ExtResource("5_h2bbj")
 region = Rect2(640, 0, 128, 128)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_ei8m8"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(768, 0, 128, 128)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_lxjv3"]
 atlas = ExtResource("5_h2bbj")
 region = Rect2(896, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1i12g"]
-atlas = ExtResource("5_4fe47")
-region = Rect2(512, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2obbk"]
 atlas = ExtResource("3_ya2am")
@@ -120,6 +122,10 @@ region = Rect2(256, 0, 128, 128)
 atlas = ExtResource("5_4fe47")
 region = Rect2(384, 0, 128, 128)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i12g"]
+atlas = ExtResource("5_4fe47")
+region = Rect2(512, 0, 128, 128)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_7h4st"]
 atlas = ExtResource("5_4fe47")
 region = Rect2(640, 0, 128, 128)
@@ -176,10 +182,18 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ei8m8")
+"texture": ExtResource("3_sapvr")
 }],
 "loop": true,
 "name": &"CROUCH_IDLE",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_0uget")
+}],
+"loop": true,
+"name": &"CROUCH_JUMP",
 "speed": 5.0
 }, {
 "frames": [{
@@ -198,7 +212,15 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1i12g")
+"texture": ExtResource("5_3lck2")
+}],
+"loop": true,
+"name": &"HANGING",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_01ncj")
 }],
 "loop": true,
 "name": &"IDLE",
@@ -213,6 +235,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_gre7b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_rjp1w")
 }],
 "loop": false,
 "name": &"JUMPING",
@@ -287,6 +312,14 @@ animations = [{
 "loop": true,
 "name": &"RUNNING",
 "speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_xlvdk")
+}],
+"loop": true,
+"name": &"WALL_SLIDE",
+"speed": 5.0
 }]
 
 [sub_resource type="Animation" id="Animation_f8j6p"]
@@ -317,9 +350,8 @@ roll_speed = 1400
 position = Vector2(8, 8)
 scale = Vector2(0.777222, 0.9043)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
-animation = &"RUNNING"
+animation = &"ROLLING"
 autoplay = "IDLE"
-frame_progress = 0.97732
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
 position = Vector2(1, 0)
