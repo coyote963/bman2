@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=63 format=3 uid="uid://dn76or03thpq4"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://d2y1eeeoq0wtd" path="res://Assets/Climb/Ladder_Climbing.png" id="2_5qudx"]

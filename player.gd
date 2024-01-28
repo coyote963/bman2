@@ -11,16 +11,16 @@ extends CharacterBody2D
 @export var gravity = 5000
 
 # Horizontal speed
-@export var crouch_penalty = 0.2
+@export var crouch_penalty = 0.5
 @export var air_max_speed = 600
 @export var max_fall_speed = 1500
 @export var air_acceleration = 250
 @export var ground_max_speed = 500
 @export var ground_acceleration = 150
 
-@export var double_jump_initial_speed = -1000
+@export var double_jump_initial_speed = -1200
 @export var jump_initial_speed = -1200
-@export var fastfall_multiplier = 2
+@export var fastfall_multiplier = 1.3
 @export var jump_release_slowdown = 0.7
 
 @export var walljump_initial_vertical_speed = -1400
@@ -33,7 +33,7 @@ extends CharacterBody2D
 @export var roll_speed = 300
 @export var roll_duration = 2.0
 
-enum MovementState { RUNNING, RUNNING_BACK, IDLE, JUMPING_UP, JUMPING_DOWN, CROUCH_IDLE, CROUCH_WALK, CROUCH_WALK_BACK, CROUCH_JUMP, CLIMBING, HANGING, WALL_SLIDE, ROLLING, ROLLING_BACK }
+enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CLIMBING, HANGING, WALL_SLIDE, ROLLING }
 var movement_state := MovementState.IDLE
 var on_ladder := false
 var has_double_jump = false
@@ -65,30 +65,37 @@ func _create_rolling_timer(duration):
 
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation():
-	var _is_flipped = input.mouse_coordinates[0] < _animated_sprite.global_position.x
-	_animated_sprite.set_flip_h(_is_flipped)
+	var _is_facing_left = input.mouse_coordinates[0] < _animated_sprite.global_position.x
+	var _is_moving_left = input.direction.x < 0
+	_animated_sprite.set_flip_h(_is_facing_left)
 	if movement_state == MovementState.IDLE:
-		_animated_sprite.play("IDLE")
-	elif movement_state == MovementState.JUMPING_UP:
-		_animated_sprite.play("JUMPING_UP")
-	elif movement_state == MovementState.JUMPING_DOWN:
-		_animated_sprite.play("JUMPING_DOWN")
+		if input.down[1]:
+			_animated_sprite.play("CROUCH_IDLE")
+		else:
+			_animated_sprite.play("IDLE")
+	elif movement_state == MovementState.JUMPING:
+		if input.down[1]:
+				_animated_sprite.play("CROUCH_JUMP")
+		else:
+			if velocity.y > 0:
+				_animated_sprite.play("JUMPING_DOWN")
+			else:
+				_animated_sprite.play("JUMPING_UP")
 	elif movement_state == MovementState.RUNNING:
-		_animated_sprite.play("RUNNING")
-	elif movement_state == MovementState.RUNNING_BACK:
-		_animated_sprite.play_backwards("RUNNING")
-	elif movement_state == MovementState.CROUCH_WALK:
-		_animated_sprite.play("CROUCH_WALK")
-	elif movement_state == MovementState.CROUCH_WALK_BACK:
-		_animated_sprite.play_backwards("CROUCH_WALK")
-	elif movement_state == MovementState.CROUCH_JUMP:
-		_animated_sprite.play("CROUCH_JUMP")
+		if input.down[1]:
+			if _is_facing_left != _is_moving_left:
+				_animated_sprite.play_backwards("CROUCH_WALK")
+			else:
+				_animated_sprite.play("CROUCH_WALK")
+		else:
+			if _is_facing_left != _is_moving_left:
+				_animated_sprite.play_backwards("RUNNING")
+			else:
+				_animated_sprite.play("RUNNING")
 	elif movement_state == MovementState.CROUCH_IDLE:
 		_animated_sprite.play("CROUCH_IDLE")
 	elif movement_state == MovementState.ROLLING:
 		_animated_sprite.play("ROLLING")
-	elif movement_state == MovementState.ROLLING_BACK:
-		_animated_sprite.play_backwards("ROLLING")	
 	elif movement_state == MovementState.CLIMBING:
 		_animated_sprite.play("CLIMBING")
 	elif movement_state == MovementState.WALL_SLIDE:
@@ -117,37 +124,31 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				)
 				var direction_to_cursor = (input.mouse_coordinates - _animated_sprite.global_position).normalized()
 				var is_moving_towards_cursor = input.direction.x * direction_to_cursor.x > 0
-				if is_moving_towards_cursor:
-					movement_state = MovementState.RUNNING
-				else:
-					movement_state = MovementState.RUNNING_BACK
+				movement_state = MovementState.RUNNING
 			if not is_on_floor():
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
 			if input.jump[0]:
 				velocity.y = jump_initial_speed
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
-			if input.down[1]:
-				movement_state = MovementState.CROUCH_IDLE
-		
+				
 		MovementState.RUNNING:
 			if input.direction.x == 0 and is_on_floor():
 				velocity.x = move_toward(velocity.x, 0, ground_friction)
 				if velocity.x == 0:
 					movement_state = MovementState.IDLE
 			if input.direction.x != 0 and is_on_floor():
-				velocity.x = move_toward(
-					velocity.x,
-					input.direction.x * ground_max_speed,
-					ground_acceleration
-				)
+				if input.down[1]:
+					velocity.x = move_toward(velocity.x, input.direction.x * ground_max_speed * crouch_penalty, ground_acceleration)
+				else:
+					velocity.x = move_toward(velocity.x, input.direction.x * ground_max_speed, ground_acceleration)
 			if not is_on_floor():
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
 			if input.jump[0]:
 				velocity.y = jump_initial_speed
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
@@ -161,94 +162,36 @@ func _rollback_tick(delta, _tick, _is_fresh):
 					#velocity = Vector2.ZERO
 				#)
 		
-		MovementState.RUNNING_BACK:
-			if input.direction.x == 0 and is_on_floor():
-				velocity.x = move_toward(velocity.x, 0, ground_friction)
-				if velocity.x == 0:
-					movement_state = MovementState.IDLE
-			if input.direction.x != 0 and is_on_floor():
-				velocity.x = move_toward(
-					velocity.x,
-					input.direction.x * ground_max_speed,
-					ground_acceleration
-				)
-			if not is_on_floor():
-				movement_state = MovementState.JUMPING_UP
-			if input.jump[0]:
-				velocity.y = jump_initial_speed
-				movement_state = MovementState.JUMPING_UP
+		MovementState.JUMPING:
+			if input.down[1]:
+				if velocity.y > 0:
+					velocity.y += gravity * fastfall_multiplier * delta
+				else:
+					velocity.y += gravity * delta
+			else:
+				if velocity.y > max_fall_speed:
+					velocity.y = max_fall_speed
+				else:
+					velocity.y += gravity * delta
+			if input.direction.x != 0:
+				velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
+			else:
+				velocity.x = move_toward(velocity.x, 0, air_friction)
+			if _rightRaycast.is_colliding() or _leftRaycast.is_colliding():
+				movement_state = MovementState.WALL_SLIDE
+			if is_on_floor():
+				has_double_jump = true
+				movement_state = MovementState.IDLE
 			if can_climb_ladder():
+				has_double_jump = true
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
-			if input.down[0]:
-				velocity.x = roll_speed * velocity.x / abs(velocity.x)
-				movement_state = MovementState.ROLLING_BACK
-				last_rolled = NetworkTime.tick
+			if input.jump[2] and velocity.y < 0:
+				velocity.y *= jump_release_slowdown
+			if input.jump[0] and has_double_jump:
+				has_double_jump = false
+				velocity.y = double_jump_initial_speed
 				
-				#get_tree().create_timer(roll_duration).timeout.connect(func():
-					#movement_state = MovementState.IDLE
-					#velocity = Vector2.ZERO
-				#)
-		
-		MovementState.JUMPING_UP:
-			if input.down[1]:
-				movement_state = MovementState.CROUCH_JUMP
-				velocity.y += gravity * fastfall_multiplier * delta
-			else:
-				if velocity.y > max_fall_speed:
-					velocity.y = max_fall_speed
-				else:
-					velocity.y += gravity * delta
-			if input.direction.x != 0:
-				velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
-			else:
-				velocity.x = move_toward(velocity.x, 0, air_friction)
-			if _rightRaycast.is_colliding() or _leftRaycast.is_colliding():
-				movement_state = MovementState.WALL_SLIDE
-			if is_on_floor():
-				has_double_jump = true
-				movement_state = MovementState.IDLE
-			if can_climb_ladder():
-				has_double_jump = true
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
-			if input.jump[2] and velocity.y < 0:
-				velocity.y *= jump_release_slowdown
-			if input.jump[0] and has_double_jump:
-				has_double_jump = false
-				velocity.y = double_jump_initial_speed
-			if velocity.y > 0:
-				movement_state = MovementState.JUMPING_DOWN
-		
-		MovementState.JUMPING_DOWN:
-			if input.down[1]:
-				movement_state = MovementState.CROUCH_JUMP
-				velocity.y += gravity * fastfall_multiplier * delta
-			else:
-				if velocity.y > max_fall_speed:
-					velocity.y = max_fall_speed
-				else:
-					velocity.y += gravity * delta
-			if input.direction.x != 0:
-				velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
-			else:
-				velocity.x = move_toward(velocity.x, 0, air_friction)
-			if _rightRaycast.is_colliding() or _leftRaycast.is_colliding():
-				movement_state = MovementState.WALL_SLIDE
-			if is_on_floor():
-				has_double_jump = true
-				movement_state = MovementState.IDLE
-			if can_climb_ladder():
-				has_double_jump = true
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
-			if input.jump[2] and velocity.y < 0:
-				velocity.y *= jump_release_slowdown
-			if input.jump[0] and has_double_jump:
-				has_double_jump = false
-				velocity.y = double_jump_initial_speed
-				movement_state = MovementState.JUMPING_UP
-		
 		MovementState.WALL_SLIDE:
 			if input.down[1]:
 				velocity.y += gravity * fastfall_multiplier * delta 
@@ -258,7 +201,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity.y = 200
 			velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
 			if not _rightRaycast.is_colliding() and not _leftRaycast.is_colliding():
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
@@ -276,11 +219,15 @@ func _rollback_tick(delta, _tick, _is_fresh):
 						walljump_initial_horizontal_speed,
 						walljump_initial_vertical_speed
 					)
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
+				
 		MovementState.CLIMBING:
+			if input.interact[0]:
+				velocity = Vector2(0, jump_initial_speed)
+				movement_state = MovementState.JUMPING
 			if input.direction.x != 0:
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
 			elif on_ladder:
 				velocity.y = (
 					int(input.down[1]) * climb_speed - 
@@ -289,13 +236,17 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			else:
 				velocity.y = jump_initial_speed
 				#movement_state = MovementState.JUMPING
+			has_double_jump = true
 			if velocity.y == 0:
 				movement_state = MovementState.HANGING
 		
 		MovementState.HANGING:
+			if input.interact[0]:
+				velocity = Vector2(0, jump_initial_speed)
+				movement_state = MovementState.JUMPING
 			if input.direction.x != 0:
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
 			elif on_ladder:
 				velocity.y = (
 					int(input.down[1]) * climb_speed - 
@@ -305,78 +256,8 @@ func _rollback_tick(delta, _tick, _is_fresh):
 					movement_state = MovementState.CLIMBING
 			else:
 				velocity.y = jump_initial_speed
-		MovementState.CROUCH_JUMP:
-			velocity.y += gravity * fastfall_multiplier * delta
-			if not input.down[1]:
-				movement_state = MovementState.JUMPING_UP
-			if is_on_floor():
-				movement_state = MovementState.CROUCH_IDLE
-			if input.direction.x != 0:
-				velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
-			if input.jump[0] and has_double_jump:
-				has_double_jump = false
-				velocity.y = double_jump_initial_speed
-				movement_state = MovementState.JUMPING_UP
+			has_double_jump = true
 			
-		MovementState.CROUCH_IDLE:
-			if input.direction.x != 0:
-				if input.direction.x > 0:
-					movement_state = MovementState.CROUCH_WALK
-				if input.direction.x < 0:
-					movement_state = MovementState.CROUCH_WALK_BACK
-			if input.down[2]: #Just Released
-				velocity.y = jump_initial_speed * delta
-				movement_state = MovementState.JUMPING_UP
-			if input.jump[0]: #Just Released
-				velocity.y = jump_initial_speed
-				movement_state = MovementState.JUMPING_UP
-			if not input.down[1]:
-				movement_state = MovementState.IDLE
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
-			
-		MovementState.CROUCH_WALK:
-			velocity.x = move_toward(
-				velocity.x,
-				input.direction.x * ground_max_speed * crouch_penalty,
-				ground_acceleration
-			)
-			if velocity.x == 0:
-					movement_state = MovementState.CROUCH_IDLE
-			if input.jump[0]: #Just Released
-				velocity.y = jump_initial_speed
-				movement_state = MovementState.JUMPING_UP
-			if not is_on_floor():
-				movement_state = MovementState.JUMPING_UP
-			if not input.down[1] or input.down[2]:
-				movement_state = MovementState.RUNNING
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
-			if input.jump[0]:
-				velocity.y = jump_initial_speed * delta
-				movement_state = MovementState.JUMPING_UP
-		
-		MovementState.CROUCH_WALK_BACK:
-			velocity.x = move_toward(
-				velocity.x,
-				input.direction.x * ground_max_speed * crouch_penalty,
-				ground_acceleration
-			)
-			if velocity.x == 0:
-					movement_state = MovementState.CROUCH_IDLE
-			if not is_on_floor():
-				movement_state = MovementState.JUMPING_UP
-			if not input.down[1] or input.down[2]:
-				movement_state = MovementState.RUNNING
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
-			if input.jump[0]:
-				velocity.y = jump_initial_speed * delta
-				movement_state = MovementState.JUMPING_UP
-		
 		MovementState.ROLLING:
 			print((NetworkTime.tick - last_rolled) / NetworkTime.tickrate)
 			if input.down[1]:
@@ -384,26 +265,13 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			else:
 				velocity.y += gravity * delta
 			if input.jump[0]:
-				movement_state = MovementState.JUMPING_UP
+				movement_state = MovementState.JUMPING
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = MovementState.CLIMBING
 			if (NetworkTime.tick - last_rolled) / NetworkTime.tickrate > roll_duration:
 				movement_state = MovementState.IDLE
 				
-		MovementState.ROLLING_BACK:
-			print((NetworkTime.tick - last_rolled) / NetworkTime.tickrate)
-			if input.down[1]:
-				velocity.y += gravity * fastfall_multiplier * delta
-			else:
-				velocity.y += gravity * delta
-			if input.jump[0]:
-				movement_state = MovementState.JUMPING_UP
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
-			if (NetworkTime.tick - last_rolled) / NetworkTime.tickrate > roll_duration:
-				movement_state = MovementState.IDLE
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
