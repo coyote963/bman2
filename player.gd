@@ -95,11 +95,13 @@ func play_animation():
 	elif movement_state == MovementState.CROUCH_IDLE:
 		_animated_sprite.play("CROUCH_IDLE")
 	elif movement_state == MovementState.ROLLING:
-		_animated_sprite.play("ROLLING")
+		if _is_facing_left != _is_moving_left:
+			_animated_sprite.play("BACK_ROLL")
+		else:
+			_animated_sprite.play("ROLLING")
 	elif movement_state == MovementState.CLIMBING:
 		_animated_sprite.play("CLIMBING")
-	elif movement_state == MovementState.WALL_SLIDE:
-		_animated_sprite.play("WALL_SLIDE")
+	elif movement_state == MovementState.WALL_SLIDE:		_animated_sprite.play("WALL_SLIDE")
 	elif movement_state == MovementState.HANGING:
 		_animated_sprite.play("HANGING")
 
