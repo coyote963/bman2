@@ -26,7 +26,6 @@ class InputBuffer:
 			self._queues[an].fill(false)
 	
 	func update_tick():
-		print(_queues)
 		self._ptr = (self._ptr + 1) % self._queue_size
 		for an in self._action_names:
 			self._queues[an][self._ptr] = Input.is_action_pressed(an)
