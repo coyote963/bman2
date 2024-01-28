@@ -31,7 +31,7 @@ extends CharacterBody2D
 @export var climb_speed = 500
 @export var crouch_walk_speed = 600
 @export var roll_speed = 300
-@export var roll_duration = 0.6
+@export var roll_duration = 0.3
 
 enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK, CLIMBING, WALL_SLIDE, ROLLING }
 var movement_state := MovementState.IDLE
@@ -39,7 +39,7 @@ var on_ladder := false
 var has_double_jump = false
 var roll_timer : SceneTreeTimer
 var last_rolled := -1
-var roll = false
+var is_rolling = false
 
 func _ready():
 	$IDLabel.text = name
@@ -57,31 +57,36 @@ func _force_update_is_on_floor():
 	velocity = old_velocity
 
 func _on_rolling_timer_timeout():
-	roll = false
+	is_rolling = false
 
-func _create_rolling_timer(duration):
-	var timer = get_tree().create_timer(duration)
-	#timer.connect("timeout", timer, "_on_rolling_timer_timeout")
-	#timer.start()
 
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation():
-	var _is_flipped = input.mouse_coordinates[0] < _animated_sprite.global_position.x
-	_animated_sprite.set_flip_h(_is_flipped)
+	var _is_facing_left = input.mouse_coordinates[0] < _animated_sprite.global_position.x
+	var _is_moving_left = input.direction.x < 0
+	_animated_sprite.set_flip_h(_is_facing_left)
 	if movement_state == MovementState.IDLE:
 		_animated_sprite.play("IDLE")
 	elif movement_state == MovementState.JUMPING:
 		_animated_sprite.play("JUMPING")
 	elif movement_state == MovementState.RUNNING:
-		_animated_sprite.play("RUNNING")
+		if _is_facing_left != _is_moving_left:
+			_animated_sprite.play_backwards("RUNNING")
+		else:
+			_animated_sprite.play("RUNNING")
 	elif movement_state == MovementState.CROUCH_WALK:
-		_animated_sprite.play("CROUCH_WALK")
+		if _is_facing_left != _is_moving_left:
+			_animated_sprite.play_backwards("CROUCH_WALK")
+		else:
+			_animated_sprite.play("CROUCH_WALK")
 	elif movement_state == MovementState.CROUCH_IDLE:
 		_animated_sprite.play("CROUCH_IDLE")
 	elif movement_state == MovementState.ROLLING:
 		_animated_sprite.play("ROLLING")
 	elif movement_state == MovementState.CLIMBING:
 		_animated_sprite.play("CLIMBING")
+		if input.direction.y == 0:
+			_animated_sprite.pause()
 
 func clamp_to_ladder():
 	var bodies = ladder_checker.get_overlapping_bodies()
@@ -138,7 +143,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity.x = roll_speed * (velocity.x / abs(velocity.x))
 				last_rolled = NetworkTime.tick
 				movement_state = MovementState.ROLLING
-				roll = true
+				is_rolling = true
 				$RollingTimer.start()
 				
 				#get_tree().create_timer(roll_duration).timeout.connect(func():
@@ -203,6 +208,9 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				movement_state = MovementState.JUMPING
 				
 		MovementState.CLIMBING:
+			if input.interact[0]:
+				velocity = Vector2(0, jump_initial_speed)
+				movement_state = MovementState.JUMPING
 			if input.direction.x != 0:
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
 				movement_state = MovementState.JUMPING
@@ -218,8 +226,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		MovementState.CROUCH_IDLE:
 			if input.direction.x != 0:
 				movement_state = MovementState.CROUCH_WALK
-			if input.down[2]: #Just Released
-				velocity.y = jump_initial_speed * delta
+			if not is_on_floor():
 				movement_state = MovementState.JUMPING
 			if not input.down[1]:
 				movement_state = MovementState.IDLE
@@ -250,7 +257,9 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity.y += gravity * fastfall_multiplier * delta
 			else:
 				velocity.y += gravity * delta
-			if input.jump[0] or !roll:
+			if not is_rolling:
+				movement_state = MovementState.IDLE
+			if input.jump[0]:
 				movement_state = MovementState.JUMPING
 			if can_climb_ladder():
 				clamp_to_ladder()
@@ -264,10 +273,10 @@ func _rollback_tick(delta, _tick, _is_fresh):
 func can_climb_ladder() -> bool:
 	return on_ladder and input.interact[0]
 
-func _on_ladder_checker_body_entered(body):
+func _on_ladder_checker_body_entered(_body):
 	on_ladder = true
 
-func _on_ladder_checker_body_exited(body):
+func _on_ladder_checker_body_exited(_body):
 	if on_ladder:
 		velocity.y = 0
 		movement_state = MovementState.JUMPING

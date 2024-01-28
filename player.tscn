@@ -286,7 +286,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"RUNNING",
-"speed": 20.0
+"speed": 15.0
 }]
 
 [sub_resource type="Animation" id="Animation_f8j6p"]
@@ -298,10 +298,10 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jywao"]
-size = Vector2(38, 128)
+size = Vector2(38, 111)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvb7j"]
-size = Vector2(48, 64)
+size = Vector2(76.5, 112)
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("input", "ladder_checker") groups=["CanClimb"]]
 collision_layer = 8
@@ -315,8 +315,9 @@ roll_speed = 1400
 position = Vector2(8, 8)
 scale = Vector2(0.777222, 0.9043)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
-animation = &"ROLLING"
+animation = &"RUNNING"
 autoplay = "IDLE"
+frame_progress = 0.97732
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
 position = Vector2(1, 0)
@@ -373,6 +374,7 @@ libraries = {
 }
 
 [node name="EnvironmentCollision" type="CollisionShape2D" parent="."]
+position = Vector2(0, 8.5)
 shape = SubResource("RectangleShape2D_jywao")
 
 [node name="LadderChecker" type="Area2D" parent="."]
@@ -380,10 +382,11 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LadderChecker"]
+position = Vector2(1.75, 8)
 shape = SubResource("RectangleShape2D_cvb7j")
 
 [node name="RollingTimer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 0.1
 one_shot = true
 
 [connection signal="body_entered" from="LadderChecker" to="." method="_on_ladder_checker_body_entered"]
