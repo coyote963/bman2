@@ -36,7 +36,7 @@ func _can_fire() -> bool:
 
 func _after_fire(proj):
 	last_fired = NetworkTime.tick
-	#sound.play()
+	sound.play()
 
 func _spawn() -> Node2D:
 	print("pew")

@@ -36,6 +36,8 @@ var use_global_gravity = false
 @export var roll_speed = 300
 @export var roll_duration = 0.3
 
+@export var move_walljump = false
+
 enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK, CLIMBING, WALL_SLIDE, ROLLING }
 var movement_state := MovementState.IDLE
 var on_ladder := false
@@ -166,9 +168,9 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				else:
 					velocity.y += gravity * delta
 			if input.direction.x != 0:
-				velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
+				velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration * delta)
 			else:
-				velocity.x = move_toward(velocity.x, 0, air_friction)
+				velocity.x = move_toward(velocity.x, 0, air_friction * delta)
 			if _rightRaycast.is_colliding() or _leftRaycast.is_colliding():
 				movement_state = MovementState.WALL_SLIDE
 			if is_on_floor():
@@ -191,7 +193,8 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity.y += gravity * delta
 			else:
 				velocity.y = 200
-			velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
+			if move_walljump:
+				velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
 			if not _rightRaycast.is_colliding() and not _leftRaycast.is_colliding():
 				movement_state = MovementState.JUMPING
 			if can_climb_ladder():
@@ -215,7 +218,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				
 		MovementState.CLIMBING:
 			if input.interact[0]:
-				velocity = Vector2(0, jump_initial_speed)
+				velocity.y = jump_initial_speed
 				movement_state = MovementState.JUMPING
 			if input.direction.x != 0:
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
@@ -234,7 +237,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				movement_state = MovementState.CROUCH_WALK
 			if not is_on_floor():
 				movement_state = MovementState.JUMPING
-			if not input.down[1]:
+			if input.down[2]:
 				movement_state = MovementState.IDLE
 			if can_climb_ladder():
 				clamp_to_ladder()
