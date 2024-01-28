@@ -2,6 +2,7 @@ extends CharacterBody2D
 @onready var _rightRaycast = $RightWalljumpRaycast
 @onready var _leftRaycast = $LeftWalljumpRaycast
 @onready var _animated_sprite = $PlayerAnimation
+@onready var _state_label = $StateLabel
 
 @export var input: PlayerInput
 @export var ladder_checker: Area2D
@@ -68,6 +69,7 @@ func play_animation():
 	var _is_facing_left = input.mouse_coordinates[0] < _animated_sprite.global_position.x
 	var _is_moving_left = input.direction.x < 0
 	_animated_sprite.set_flip_h(_is_facing_left)
+
 	if movement_state == MovementState.IDLE:
 		if input.down[1]:
 			_animated_sprite.play("CROUCH_IDLE")
@@ -82,16 +84,10 @@ func play_animation():
 			else:
 				_animated_sprite.play("JUMPING_UP")
 	elif movement_state == MovementState.RUNNING:
-		if input.down[1]:
-			if _is_facing_left != _is_moving_left:
-				_animated_sprite.play_backwards("CROUCH_WALK")
-			else:
-				_animated_sprite.play("CROUCH_WALK")
+		if _is_facing_left != _is_moving_left:
+			_animated_sprite.play_backwards("RUNNING")
 		else:
-			if _is_facing_left != _is_moving_left:
-				_animated_sprite.play_backwards("RUNNING")
-			else:
-				_animated_sprite.play("RUNNING")
+			_animated_sprite.play("RUNNING")
 	elif movement_state == MovementState.CROUCH_IDLE:
 		_animated_sprite.play("CROUCH_IDLE")
 	elif movement_state == MovementState.ROLLING:
@@ -101,7 +97,8 @@ func play_animation():
 			_animated_sprite.play("ROLLING")
 	elif movement_state == MovementState.CLIMBING:
 		_animated_sprite.play("CLIMBING")
-	elif movement_state == MovementState.WALL_SLIDE:		_animated_sprite.play("WALL_SLIDE")
+	elif movement_state == MovementState.WALL_SLIDE:
+		_animated_sprite.play("WALL_SLIDE")
 	elif movement_state == MovementState.HANGING:
 		_animated_sprite.play("HANGING")
 
@@ -273,7 +270,8 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				movement_state = MovementState.CLIMBING
 			if (NetworkTime.tick - last_rolled) / NetworkTime.tickrate > roll_duration:
 				movement_state = MovementState.IDLE
-				
+	
+	_state_label.text = MovementState.keys()[movement_state]
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor

@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=71 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://d2y1eeeoq0wtd" path="res://Assets/Climb/Ladder_Climbing.png" id="2_5qudx"]
@@ -18,6 +18,38 @@
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
 [ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
 [ext_resource type="Texture2D" uid="uid://bxcbs6s4pnglo" path="res://Assets/Wall Slide/Wallslide.png" id="11_hr0do"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_30jkn"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(1024, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_etqfr"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ixk1w"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rasuy"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iiiu6"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nq1ea"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cjc47"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yhdij"]
+atlas = ExtResource("5_h2bbj")
+region = Rect2(1152, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2tjs1"]
 atlas = ExtResource("2_5qudx")
@@ -177,6 +209,35 @@ region = Rect2(0, 0, 128, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_xaeb6"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_30jkn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_etqfr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ixk1w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rasuy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iiiu6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nq1ea")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cjc47")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yhdij")
+}],
+"loop": true,
+"name": &"BACK_ROLL",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2tjs1")
@@ -386,7 +447,8 @@ roll_duration = 0.3
 position = Vector2(8, 8)
 scale = Vector2(0.9, 0.88)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
-animation = &"CROUCH_JUMP"
+animation = &"BACK_ROLL"
+frame_progress = 0.582064
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
 position = Vector2(1, 0)
@@ -408,12 +470,21 @@ script = ExtResource("4_a8brg")
 input = NodePath("../../PlayerInput")
 
 [node name="IDLabel" type="Label" parent="."]
-offset_left = -103.0
-offset_top = -87.0
-offset_right = 103.0
-offset_bottom = -64.0
+offset_left = -112.0
+offset_top = -112.0
+offset_right = 94.0
+offset_bottom = -89.0
 pivot_offset = Vector2(103, -1)
 text = "unique_id"
+horizontal_alignment = 1
+
+[node name="StateLabel" type="Label" parent="."]
+offset_left = -104.0
+offset_top = -88.0
+offset_right = 102.0
+offset_bottom = -65.0
+pivot_offset = Vector2(103, -1)
+text = "player_state"
 horizontal_alignment = 1
 
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
