@@ -6,13 +6,12 @@ extends CharacterBody2D
 @export var input: PlayerInput
 @export var ladder_checker: Area2D
 
-<<<<<<< HEAD
-=======
-
->>>>>>> c808e56efa08a9b9ab38ce75e6648931595eed7d
 @export var air_friction = 200
 @export var ground_friction = 1000
 @export var gravity = 3000
+
+
+var use_global_gravity = false
 
 # Horizontal speed
 @export var crouch_penalty = 0.2

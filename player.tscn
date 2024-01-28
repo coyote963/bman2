@@ -1,17 +1,17 @@
-
-[gd_scene load_steps=13 format=3 uid="uid://s7nbd7fg7l3k"]
-
+[gd_scene load_steps=50 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://d2y1eeeoq0wtd" path="res://Assets/Climb/Ladder_Climbing.png" id="2_5qudx"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
-[ext_resource type="Script" path="res://AnimatedSprite2D.gd" id="3_b2fi1"]
-[ext_resource type="Script" path="res://Hands.gd" id="5_o8p22"]
-[ext_resource type="PackedScene" uid="uid://cv0mw24kpj4wu" path="res://Game/Items/Tools/Weapons/Guns/rifle.tscn" id="6_iwmrk"]
-[ext_resource type="PackedScene" uid="uid://b0okl2t26t6kw" path="res://Game/Projectiles/projectile.tscn" id="7_lopnx"]
+[ext_resource type="Texture2D" uid="uid://cxpgc4n7cnlq1" path="res://Assets/Jump/Jump.png" id="3_ya2am"]
+[ext_resource type="Texture2D" uid="uid://c0mtwu7ra1o5k" path="res://Assets/Run/Walk_Stik.png" id="5_4fe47"]
+[ext_resource type="Texture2D" uid="uid://drt7gn2gvnu0j" path="res://Assets/Roll/Roll_resize.png" id="5_h2bbj"]
 [ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
 [ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
+[ext_resource type="Script" path="res://Hands.gd" id="10_1f8yc"]
+[ext_resource type="PackedScene" uid="uid://cv0mw24kpj4wu" path="res://Game/Items/Tools/Weapons/Guns/rifle.tscn" id="11_ksv3v"]
+[ext_resource type="AudioStream" uid="uid://bjty4sufn4wai" path="res://Assets/Sounds/FirePlaceholder.mp3" id="12_mesq5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2tjs1"]
 atlas = ExtResource("2_5qudx")
@@ -332,14 +332,6 @@ target_position = Vector2(-24, 0)
 position_smoothing_enabled = true
 script = ExtResource("3_8bmha")
 
-[node name="Hands" type="Node2D" parent="." node_paths=PackedStringArray("input")]
-script = ExtResource("5_o8p22")
-input = NodePath("../PlayerInput")
-
-[node name="Rifle" parent="Hands" node_paths=PackedStringArray("input") instance=ExtResource("6_iwmrk")]
-projectile = ExtResource("7_lopnx")
-input = NodePath("../../PlayerInput")
-
 [node name="IDLabel" type="Label" parent="."]
 offset_left = -64.0
 offset_top = -112.0
@@ -390,6 +382,18 @@ shape = SubResource("RectangleShape2D_cvb7j")
 [node name="RollingTimer" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
+
+[node name="Hands" type="Node2D" parent="." node_paths=PackedStringArray("input")]
+script = ExtResource("10_1f8yc")
+input = NodePath("../PlayerInput")
+
+[node name="Rifle" parent="Hands" node_paths=PackedStringArray("input", "sound") instance=ExtResource("11_ksv3v")]
+input = NodePath("../../PlayerInput")
+sound = NodePath("AudioStreamPlayer2D")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Hands/Rifle"]
+stream = ExtResource("12_mesq5")
+attenuation = 0.81225
 
 [connection signal="body_entered" from="LadderChecker" to="." method="_on_ladder_checker_body_entered"]
 [connection signal="body_exited" from="LadderChecker" to="." method="_on_ladder_checker_body_exited"]
