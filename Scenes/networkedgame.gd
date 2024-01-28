@@ -25,7 +25,6 @@ func _ready():
 	create_player(Network.unique_id, default_pos)
 
 func handle_host():
-	print("Handle HOst")
 	create_player(1, default_pos)
 
 func _handle_connected(id: int):
