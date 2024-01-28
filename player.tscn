@@ -317,7 +317,7 @@ scale = Vector2(0.777222, 0.9043)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
 animation = &"RUNNING"
 autoplay = "IDLE"
-frame_progress = 0.953725
+frame_progress = 0.97732
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
 position = Vector2(1, 0)

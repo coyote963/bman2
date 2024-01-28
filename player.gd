@@ -57,7 +57,6 @@ func _force_update_is_on_floor():
 	velocity = old_velocity
 
 func _on_rolling_timer_timeout():
-	print("roll timeout")
 	is_rolling = false
 
 
@@ -227,9 +226,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		MovementState.CROUCH_IDLE:
 			if input.direction.x != 0:
 				movement_state = MovementState.CROUCH_WALK
-			if input.down[2]: #Just Released
-				velocity.y = jump_initial_speed * delta
-				movement_state = MovementState.JUMPING
 			if not is_on_floor():
 				movement_state = MovementState.JUMPING
 			if not input.down[1]:
