@@ -10,6 +10,9 @@ extends CharacterBody2D
 @export var ground_friction = 1000
 @export var gravity = 3000
 
+
+var use_global_gravity = false
+
 # Horizontal speed
 @export var crouch_penalty = 0.2
 @export var air_max_speed = 1200
@@ -42,6 +45,10 @@ var last_rolled := -1
 var is_rolling = false
 
 func _ready():
+	
+	if use_global_gravity:
+		gravity = Globals.gravity
+	
 	$IDLabel.text = name
 	if input == null:
 		input = $PlayerInput
@@ -58,7 +65,6 @@ func _force_update_is_on_floor():
 
 func _on_rolling_timer_timeout():
 	is_rolling = false
-
 
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation():
