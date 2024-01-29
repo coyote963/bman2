@@ -251,8 +251,17 @@ func _rollback_tick(delta, _tick, _is_fresh):
 					int(input.down[1]) * climb_speed - 
 					int(input.jump[1]) * climb_speed
 				)
+				if input.direction.y == 0:
+					movement_state = MovementState.HANGING
 			else:
 				velocity.y = 0
+				movement_state = MovementState.JUMPING
+		
+		MovementState.HANGING:
+			if input.direction.y != 0:
+				movement_state = MovementState.CLIMBING
+			if input.direction.x != 0:
+				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
 				movement_state = MovementState.JUMPING
 
 		MovementState.CROUCH_IDLE:
