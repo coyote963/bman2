@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cns6bneqppi2s"
-path="res://.godot/imported/tileset_fields_wip.png-a8c1f3315f80e50298309d1cea83343f.ctex"
+uid="uid://bssis5w76arji"
+path="res://.godot/imported/Beretta.png-7b4df75944b400591817dbc349708599.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/tileset_fields_wip.png"
-dest_files=["res://.godot/imported/tileset_fields_wip.png-a8c1f3315f80e50298309d1cea83343f.ctex"]
+source_file="res://Assets/Weapons/Beretta.png"
+dest_files=["res://.godot/imported/Beretta.png-7b4df75944b400591817dbc349708599.ctex"]
 
 [params]
 

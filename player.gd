@@ -36,6 +36,9 @@ var use_global_gravity = false
 @export var roll_speed = 300
 @export var roll_duration = 0.3
 
+signal reload()
+signal switch_weapons()
+
 enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK, CLIMBING, WALL_SLIDE, ROLLING }
 var movement_state := MovementState.IDLE
 var on_ladder := false
@@ -44,11 +47,11 @@ var roll_timer : SceneTreeTimer
 var last_rolled := -1
 var is_rolling = false
 
+
+
 func _ready():
-	
 	if use_global_gravity:
 		gravity = Globals.gravity
-	
 	$IDLabel.text = name
 	if input == null:
 		input = $PlayerInput
@@ -103,6 +106,10 @@ func clamp_to_ladder():
 
 func _rollback_tick(delta, _tick, _is_fresh):
 	_force_update_is_on_floor()
+	if input.reload[0]:
+		reload.emit()
+	if input.switch[0]:
+		switch_weapons.emit()
 	$State.text = MovementState.keys()[movement_state]
 	match movement_state:
 		MovementState.IDLE:

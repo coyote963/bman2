@@ -8,8 +8,11 @@ var direction = Vector2.ZERO
 var down := [false, false, false ]
 var jump := [false, false, false ]
 var interact := [false, false, false ]
+var reload := [false, false, false]
+var switch := [false, false, false]
+var is_firing := false
 var mouse_coordinates = Vector2.ZERO
-var is_firing = false
+
 
 class InputBuffer:
 	# Add base class for movement keys
@@ -51,7 +54,10 @@ func get_axis() -> Vector2:
 var input_buffer = InputBuffer.new(10, [
 	"down",
 	"jump",
-	"interact"
+	"interact",
+	"reload",
+	"fire",
+	"switch"
 ])
 
 func _gather():
@@ -62,5 +68,7 @@ func _gather():
 	down = input_buffer.get_state("down")
 	jump = input_buffer.get_state("jump")
 	interact = input_buffer.get_state("interact")
-	mouse_coordinates = owner.get_global_mouse_position()
 	is_firing = Input.is_action_pressed("fire")
+	reload = input_buffer.get_state("reload")
+	switch = input_buffer.get_state("switch")
+	mouse_coordinates = owner.get_global_mouse_position()

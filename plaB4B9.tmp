@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=50 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Texture2D" uid="uid://d2y1eeeoq0wtd" path="res://Assets/Climb/Ladder_Climbing.png" id="2_5qudx"]
@@ -10,8 +10,7 @@
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
 [ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
 [ext_resource type="Script" path="res://Hands.gd" id="10_1f8yc"]
-[ext_resource type="PackedScene" uid="uid://cv0mw24kpj4wu" path="res://Game/Items/Tools/Weapons/Guns/Rifle/rifle.tscn" id="11_5bg4p"]
-[ext_resource type="PackedScene" uid="uid://dcfyv6xexnbe1" path="res://Game/Items/Tools/Weapons/Guns/Pistol/Pistol.tscn" id="11_iv5v3"]
+[ext_resource type="PackedScene" uid="uid://cv0mw24kpj4wu" path="res://Game/Items/Tools/Weapons/Guns/rifle.tscn" id="11_ksv3v"]
 [ext_resource type="Script" path="res://HUD.gd" id="12_m0w1c"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2tjs1"]
@@ -384,19 +383,17 @@ shape = SubResource("RectangleShape2D_cvb7j")
 wait_time = 0.1
 one_shot = true
 
-[node name="Hands" type="Node2D" parent="." node_paths=PackedStringArray("input", "weapons")]
+[node name="Hands" type="Node2D" parent="." node_paths=PackedStringArray("input")]
 script = ExtResource("10_1f8yc")
 input = NodePath("../PlayerInput")
-weapons = [NodePath("Pistol"), NodePath("Rifle")]
 
-[node name="Pistol" parent="Hands" node_paths=PackedStringArray("input") instance=ExtResource("11_iv5v3")]
+[node name="Rifle" parent="Hands" node_paths=PackedStringArray("input") instance=ExtResource("11_ksv3v")]
 input = NodePath("../../PlayerInput")
 
-[node name="Rifle" parent="Hands" node_paths=PackedStringArray("input") instance=ExtResource("11_5bg4p")]
+[node name="Rifle2" parent="Hands" node_paths=PackedStringArray("input") instance=ExtResource("11_ksv3v")]
 input = NodePath("../../PlayerInput")
 
 [node name="HUD" type="CanvasLayer" parent="."]
-unique_name_in_owner = true
 script = ExtResource("12_m0w1c")
 
 [node name="Control" type="Control" parent="HUD"]
@@ -411,8 +408,8 @@ layout_mode = 0
 offset_right = 103.0
 offset_bottom = 23.0
 
-[connection signal="reload" from="." to="Hands" method="_on_player_reload"]
-[connection signal="switch_weapons" from="." to="Hands" method="_on_player_switch_weapons"]
 [connection signal="body_entered" from="LadderChecker" to="." method="_on_ladder_checker_body_entered"]
 [connection signal="body_exited" from="LadderChecker" to="." method="_on_ladder_checker_body_exited"]
 [connection signal="timeout" from="RollingTimer" to="." method="_on_rolling_timer_timeout"]
+[connection signal="ammo_changed" from="Hands/Rifle" to="HUD" method="_on_rifle_ammo_changed"]
+[connection signal="ammo_changed" from="Hands/Rifle2" to="HUD" method="_on_rifle_ammo_changed"]
