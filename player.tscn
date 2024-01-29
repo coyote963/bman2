@@ -341,8 +341,14 @@ collision_layer = 8
 script = ExtResource("1_rhoob")
 input = NodePath("PlayerInput")
 ladder_checker = NodePath("LadderChecker")
-ground_friction = 300
-air_acceleration = 2000
+gravity = 5000
+crouch_penalty = 0.5
+air_max_speed = 600
+air_acceleration = 250
+ground_max_speed = 500
+double_jump_initial_speed = -1200
+jump_initial_speed = -1200
+fastfall_multiplier = 1
 wallslide_friction = 0.01
 roll_speed = 1400
 
