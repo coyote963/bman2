@@ -76,13 +76,14 @@ func play_animation():
 	if movement_state == MovementState.IDLE:
 		_animated_sprite.play("IDLE")
 	elif movement_state == MovementState.JUMPING:
-		_animated_sprite.play("JUMPING")
+		
 		if input.down[1]:
 			_animated_sprite.play("CROUCH_JUMP")
-		if velocity.y > 0:
-			_animated_sprite.frame = 3
+		if velocity.y < 0:
+			_animated_sprite.play("JUMPING_RISE")
+			
 		else:
-			_animated_sprite.frame = 2
+			_animated_sprite.play("JUMPING_FALL")
 	elif movement_state == MovementState.RUNNING:
 		if _is_facing_left != _is_moving_left:
 			_animated_sprite.play_backwards("RUNNING")

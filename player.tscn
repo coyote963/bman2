@@ -228,6 +228,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("8_rjp1w")
+}],
+"loop": true,
+"name": &"JUMPING_FALL",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_2obbk")
 }, {
 "duration": 1.0,
@@ -235,12 +243,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_gre7b")
-}, {
-"duration": 1.0,
-"texture": ExtResource("8_rjp1w")
 }],
 "loop": false,
-"name": &"JUMPING",
+"name": &"JUMPING_RISE",
 "speed": 20.0
 }, {
 "frames": [{
@@ -344,7 +349,7 @@ ladder_checker = NodePath("LadderChecker")
 gravity = 5000
 crouch_penalty = 0.5
 air_max_speed = 600
-air_acceleration = 250
+air_acceleration = 1600
 ground_max_speed = 500
 double_jump_initial_speed = -1200
 jump_initial_speed = -1200
@@ -354,9 +359,8 @@ roll_speed = 1400
 
 [node name="PlayerAnimation" type="AnimatedSprite2D" parent="."]
 position = Vector2(8, 8)
-scale = Vector2(0.777222, 0.9043)
 sprite_frames = SubResource("SpriteFrames_xaeb6")
-animation = &"ROLLING"
+animation = &"JUMPING_RISE"
 autoplay = "IDLE"
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
