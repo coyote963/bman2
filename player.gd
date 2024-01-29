@@ -207,8 +207,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity.y += gravity * delta
 			else:
 				velocity.y = 200
-			if move_walljump:
-				velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
 			if not _rightRaycast.is_colliding() and not _leftRaycast.is_colliding():
 				movement_state = MovementState.JUMPING
 			if can_climb_ladder():
@@ -216,7 +214,18 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				movement_state = MovementState.CLIMBING
 			if is_on_floor():
 				movement_state = MovementState.IDLE
-			if input.jump[0]:
+			if move_walljump:
+				if _leftRaycast.is_colliding() and input.direction.x > 0:
+					velocity = Vector2(
+						-1 * walljump_initial_horizontal_speed,
+						walljump_initial_vertical_speed
+					)
+				elif _rightRaycast.is_colliding() and input.direction.x < 0:
+					velocity = Vector2(
+						walljump_initial_horizontal_speed,
+						walljump_initial_vertical_speed
+					)
+			if input.jump[0] and !move_walljump:
 				has_double_jump = true
 				if _leftRaycast.is_colliding():
 					velocity = Vector2(
