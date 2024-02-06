@@ -10,3 +10,10 @@ func _on_join_pressed():
 
 func _on_ip_text_changed(new_text):
 	Network.connect_ip = new_text
+
+func _on_generate_pressed():
+	Globals.player_name = Globals.namer.generate_name()
+	$HBoxContainer/PlayerInfo/PlayerName.text = Globals.player_name
+
+func _on_player_name_text_changed(new_text):
+	Globals.player_name = new_text
