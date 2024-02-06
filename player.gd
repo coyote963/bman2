@@ -33,7 +33,7 @@ extends CharacterBody2D
 @export var roll_speed = 300
 @export var roll_duration = 2.0
 
-enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CLIMBING, HANGING, WALL_SLIDE, ROLLING }
+enum MovementState { RUNNING, IDLE, JUMPING, CLIMBING, HANGING, WALL_SLIDE, ROLLING }
 var movement_state := MovementState.IDLE
 var on_ladder := false
 var has_double_jump = false
@@ -92,8 +92,6 @@ func play_animation():
 				_animated_sprite.play_backwards("RUNNING")
 			else:
 				_animated_sprite.play("RUNNING")
-	elif movement_state == MovementState.CROUCH_IDLE:
-		_animated_sprite.play("CROUCH_IDLE")
 	elif movement_state == MovementState.ROLLING:
 		if _is_facing_left != _is_moving_left:
 			_animated_sprite.play("BACK_ROLL")
@@ -101,7 +99,8 @@ func play_animation():
 			_animated_sprite.play("ROLLING")
 	elif movement_state == MovementState.CLIMBING:
 		_animated_sprite.play("CLIMBING")
-	elif movement_state == MovementState.WALL_SLIDE:		_animated_sprite.play("WALL_SLIDE")
+	elif movement_state == MovementState.WALL_SLIDE:
+		_animated_sprite.play("WALL_SLIDE")
 	elif movement_state == MovementState.HANGING:
 		_animated_sprite.play("HANGING")
 
@@ -225,7 +224,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				
 		MovementState.CLIMBING:
 			if input.interact[0]:
-				velocity = Vector2(0, jump_initial_speed)
+				velocity.y = jump_initial_speed
 				movement_state = MovementState.JUMPING
 			if input.direction.x != 0:
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
@@ -244,7 +243,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		
 		MovementState.HANGING:
 			if input.interact[0]:
-				velocity = Vector2(0, jump_initial_speed)
+				velocity.y = jump_initial_speed
 				movement_state = MovementState.JUMPING
 			if input.direction.x != 0:
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
