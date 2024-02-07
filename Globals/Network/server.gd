@@ -11,4 +11,5 @@ var server_info = {
 
 var player_info = {
 	#"123456789": "Coyote"
+	
 }
