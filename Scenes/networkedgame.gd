@@ -10,7 +10,7 @@ var player = preload("res://player.tscn")
 
 @onready var spawnpoints = $Spawnpoints
 
-var unique_id = -1
+
 var is_server = false
 var is_client = false
 var server = null
@@ -36,17 +36,23 @@ func _handle_new_peer(id: int):
 
 
 func create_player(id, pos):
-	print("Created player %s" % [id])
+	print("%s: Created player %s" % [Network.unique_id, id])
 	var p = player.instantiate()
 	p.name = str(id)
 	players.add_child(p)
 	p.global_position = pos
 	p.set_multiplayer_authority(1)
+	if Server.player_info.has(id):
+		p.get_node("Username").text = Server.player_info[id][0]
 	# Avatar's input object is owned by player
 	var input = p.find_child("PlayerInput")
 	if input != null:
 		input.set_multiplayer_authority(id)
 		print("%s: Set %s's ownership to %s" % [multiplayer.get_unique_id(), p.name, id])
+
+func remove_player(id):
+	var p = players.get_node(str(id))
+	p.queue_free()
 
 func client_connected(id):
 	print("%s connect to %s" % [multiplayer.get_unique_id(), id])

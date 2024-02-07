@@ -38,20 +38,28 @@ func join_server():
 func client_connected(id):
 	game.create_player(id, game.default_pos)
 	if is_server:
-		Server.player_info[str(id)] = "Unconnected"
-		rpc_id(id, "request_client_info")
+		Server.player_info[id] = ["Unconnected"]
+		rpc_id(id, "request_client_info", Server.player_info, Server.server_config)
 
 func client_disconnected(id):
 	game.remove_player(id)
+	Server.player_info.erase(id)
+	
 
-@rpc("reliable") func request_client_info(): #Clientside. server asked us for our name
+@rpc("reliable") func request_client_info(server_player_info, server_config): #Clientside. server asked us for our info and gives us the server info
 	if is_client:
+		Server.player_info = server_player_info
+		Server.server_config = server_config
 		rpc_id(1, "send_client_info", [Globals.player_name], unique_id)
+		
+		for c in Server.player_info.keys():
+			if c != unique_id:
+				game.players.get_node(str(c)).get_node("Username").text = Server.player_info[c][0]
 
 @rpc("reliable", "any_peer") func send_client_info(p_info, new_p_id): #Shared. get the new client's info. #p_info is an array containing all necessary information
 	if is_server:
-		Server.player_info[str(new_p_id)] = p_info
-		print("server: " + str(Server.player_info))
+		Server.player_info[new_p_id] = p_info
+		#print("server: " + str(Server.player_info))
 		#forward the new client's necessary info to the other clients on the server
 		var ids = multiplayer.get_peers()
 		for c in ids:
@@ -59,5 +67,8 @@ func client_disconnected(id):
 				rpc_id(c, "send_client_info", p_info, new_p_id)
 	
 	if is_client:
-		Server.player_info[str(new_p_id)] = p_info
+		Server.player_info[new_p_id] = p_info
 		print("client: " + str(Server.player_info))
+		
+	
+	game.players.get_node(str(new_p_id)).get_node("Username").text = Server.player_info[new_p_id][0]
