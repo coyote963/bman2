@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://nt17qfukiu00"]
+[gd_scene load_steps=10 format=3 uid="uid://nt17qfukiu00"]
 
 [ext_resource type="Script" path="res://Scenes/networkedgame.gd" id="1_0syg2"]
 [ext_resource type="Texture2D" uid="uid://cns6bneqppi2s" path="res://Assets/tileset_fields_wip.png" id="2_t3onm"]
 [ext_resource type="Texture2D" uid="uid://cfpgvi3nfjnv8" path="res://Assets/wood_ladder.png" id="3_8bmth"]
 [ext_resource type="Texture2D" uid="uid://cw616om8pc8qw" path="res://Assets/vecteezy_green-background-high-quality_30668435.jpg" id="4_ow6t3"]
+[ext_resource type="PackedScene" uid="uid://cf4xbwi3ta2ie" path="res://Game/Misc/Chat/chat.tscn" id="5_a2ab4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_au32l"]
 texture = ExtResource("2_t3onm")
@@ -116,3 +117,9 @@ position = Vector2(1270, -33)
 
 [node name="4" type="Marker2D" parent="Spawnpoints"]
 position = Vector2(509, -1)
+
+[node name="GlobalUI" type="Node" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="GlobalUI"]
+
+[node name="Chat" parent="GlobalUI/CanvasLayer" instance=ExtResource("5_a2ab4")]
