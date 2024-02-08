@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cf4xbwi3ta2ie"]
+[gd_scene load_steps=2 format=3 uid="uid://cf4xbwi3ta2ie"]
 
 [ext_resource type="Script" path="res://Game/Misc/Chat/chat.gd" id="1_x2hr5"]
-[ext_resource type="PackedScene" uid="uid://bg37kq5ktwq84" path="res://Game/Misc/Chat/chat_message.tscn" id="2_6tw1a"]
 
 [node name="Chat" type="Control"]
 layout_mode = 3
@@ -26,12 +25,6 @@ size_flags_vertical = 3
 [node name="Chatbox" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="ChatMessage" parent="VBoxContainer/ScrollContainer/Chatbox" instance=ExtResource("2_6tw1a")]
-layout_mode = 2
-
-[node name="ChatMessage2" parent="VBoxContainer/ScrollContainer/Chatbox" instance=ExtResource("2_6tw1a")]
-layout_mode = 2
 
 [node name="Input" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2

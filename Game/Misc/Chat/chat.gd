@@ -21,9 +21,12 @@ func scrollbar_changed():
 	chatbox.add_child(m)
 
 func _unhandled_key_input(event):
-	if event.is_action_pressed("Chat"):
+	if Input.is_action_pressed("Chat"):
 		$VBoxContainer/Input.select(0)
+		$VBoxContainer/Input.grab_focus()
 
 func _on_input_text_submitted(new_text):
 	rpc("chat_message", Network.unique_id, new_text)
 	$VBoxContainer/Input.text = ""
+	$VBoxContainer/Input.release_focus()
+	
