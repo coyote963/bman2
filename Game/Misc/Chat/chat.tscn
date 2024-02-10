@@ -1,6 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://cf4xbwi3ta2ie"]
+[gd_scene load_steps=5 format=3 uid="uid://cf4xbwi3ta2ie"]
 
 [ext_resource type="Script" path="res://Game/Misc/Chat/chat.gd" id="1_x2hr5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o7hd7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mrft6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3g3kq"]
 
 [node name="Chat" type="Control"]
 layout_mode = 3
@@ -29,8 +35,17 @@ size_flags_horizontal = 3
 [node name="Input" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 8
-placeholder_text = "Hit T to chat"
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o7hd7")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mrft6")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_3g3kq")
 context_menu_enabled = false
 virtual_keyboard_enabled = false
 
+[node name="FadeTimer" type="Timer" parent="."]
+wait_time = 6.0
+one_shot = true
+
 [connection signal="text_submitted" from="VBoxContainer/Input" to="." method="_on_input_text_submitted"]
+[connection signal="timeout" from="FadeTimer" to="." method="_on_fade_timer_timeout"]

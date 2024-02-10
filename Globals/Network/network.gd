@@ -65,6 +65,8 @@ func client_disconnected(id):
 		for c in ids:
 			if c != unique_id: #but make sure it's not executed on the severside
 				rpc_id(c, "send_client_info", p_info, new_p_id)
+		
+		game.get_node("GlobalUI/CanvasLayer/Chat").rpc("chat_message", 0, "{color=yellow}%s has joined the game" %[Server.player_info[new_p_id][0]])
 	
 	if is_client:
 		Server.player_info[new_p_id] = p_info
