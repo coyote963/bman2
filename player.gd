@@ -1,7 +1,8 @@
 extends CharacterBody2D
 @onready var _rightRaycast = $RightWalljumpRaycast
 @onready var _leftRaycast = $LeftWalljumpRaycast
-@onready var _animated_sprite = $PlayerAnimation
+@onready var _animation_player = $AnimationPlayer
+@onready var _animation_sprites = $PlayerAnimationSprites
 
 @export var input: PlayerInput
 @export var ladder_checker: Area2D
@@ -71,36 +72,37 @@ func _on_rolling_timer_timeout():
 
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation():
-	var _is_facing_left = input.mouse_coordinates[0] < _animated_sprite.global_position.x
+	var _is_facing_left = input.mouse_coordinates[0] < _animation_sprites.global_position.x
 	var _is_moving_left = input.direction.x < 0
-	_animated_sprite.set_flip_h(_is_facing_left)
-	if movement_state == MovementState.IDLE:
-		_animated_sprite.play("IDLE")
-	elif movement_state == MovementState.JUMPING:
-		_animated_sprite.play("JUMPING")
-	elif movement_state == MovementState.RUNNING:
-		if _is_facing_left != _is_moving_left:
-			_animated_sprite.play_backwards("RUNNING")
-		else:
-			_animated_sprite.play("RUNNING")
-	elif movement_state == MovementState.CROUCH_WALK:
-		if _is_facing_left != _is_moving_left:
-			_animated_sprite.play_backwards("CROUCH_WALK")
-		else:
-			_animated_sprite.play("CROUCH_WALK")
-	elif movement_state == MovementState.CROUCH_IDLE:
-		_animated_sprite.play("CROUCH_IDLE")
-	elif movement_state == MovementState.ROLLING:
-		_animated_sprite.play("ROLLING")
-	elif movement_state == MovementState.CLIMBING:
-		_animated_sprite.play("CLIMBING")
-		if input.direction.y == 0:
-			_animated_sprite.pause()
+	_animation_sprites.flip_h = _is_facing_left
+	match movement_state:
+		MovementState.IDLE:
+			_animation_player.play("Idle")
+		MovementState.JUMPING:
+			_animation_player.play("Jumping")
+		MovementState.RUNNING:
+			if _is_facing_left != _is_moving_left:
+				_animation_player.play_backwards("Running")
+			else:
+				_animation_player.play("Running")
+		MovementState.CROUCH_WALK:
+			if _is_facing_left != _is_moving_left:
+				_animation_player.play_backwards("Crouching")
+			else:
+				_animation_player.play("Crouching")
+		MovementState.CROUCH_IDLE:
+			_animation_player.play("Crouching")
+		MovementState.ROLLING:
+			_animation_player.play("Rolling")
+		MovementState.CLIMBING:
+			_animation_player.play("Climbing")
+			if input.direction.y == 0:
+				_animation_player.pause()
 
 func clamp_to_ladder():
-	var bodies = ladder_checker.get_overlapping_bodies()
-	if bodies:
-		var body = bodies[0]
+	var ladder_bodies = ladder_checker.get_overlapping_bodies().filter(func(x): return x.is_in_group("LadderGroup"))
+	if ladder_bodies:
+		var body = ladder_bodies[0]
 		position.x = body.map_to_local(body.local_to_map(position)).x
 	velocity = Vector2.ZERO
 
@@ -287,10 +289,12 @@ func can_climb_ladder() -> bool:
 	return on_ladder and input.interact[0]
 
 func _on_ladder_checker_body_entered(_body):
-	on_ladder = true
+	if _body.is_in_group("LadderGroup"):
+		on_ladder = true
 
 func _on_ladder_checker_body_exited(_body):
-	if on_ladder:
-		velocity.y = 0
-		movement_state = MovementState.JUMPING
-	on_ladder = false
+	if _body.is_in_group("LadderGroup"):
+		if on_ladder:
+			velocity.y = 0
+			movement_state = MovementState.JUMPING
+		on_ladder = false

@@ -140,7 +140,8 @@ func _generate_id(length: int = 12, charset: String = "abcdefghijklmnopqrstuvwxy
 @rpc("any_peer", "reliable", "call_remote")
 func _request_projectile(id: String, tick: int, request_data: Dictionary):
 	var sender = multiplayer.get_remote_sender_id()
-
+	print(_can_peer_use(sender))
+	print(_can_fire())
 	# Reject if sender can't use this input
 	if not _can_peer_use(sender) or not _can_fire():
 		rpc_id(sender, "_decline_projectile", id)
