@@ -491,6 +491,15 @@ pivot_offset = Vector2(103, -1)
 text = "unique_id"
 horizontal_alignment = 1
 
+[node name="StateLabel" type="Label" parent="."]
+offset_left = -104.0
+offset_top = -88.0
+offset_right = 102.0
+offset_bottom = -65.0
+pivot_offset = Vector2(103, -1)
+text = "player_state"
+horizontal_alignment = 1
+
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("8_aqte3")
 root = NodePath("..")

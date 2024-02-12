@@ -2,6 +2,7 @@ extends CharacterBody2D
 @onready var _rightRaycast = $RightWalljumpRaycast
 @onready var _leftRaycast = $LeftWalljumpRaycast
 @onready var _animated_sprite = $PlayerAnimation
+@onready var _state_label = $StateLabel
 
 @export var input: PlayerInput
 @export var ladder_checker: Area2D
@@ -123,8 +124,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 					input.direction.x * ground_max_speed,
 					ground_acceleration
 				)
-				var direction_to_cursor = (input.mouse_coordinates - _animated_sprite.global_position).normalized()
-				var is_moving_towards_cursor = input.direction.x * direction_to_cursor.x > 0
 				movement_state = MovementState.RUNNING
 			if not is_on_floor():
 				movement_state = MovementState.JUMPING
@@ -272,7 +271,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				movement_state = MovementState.CLIMBING
 			if (NetworkTime.tick - last_rolled) / NetworkTime.tickrate > roll_duration:
 				movement_state = MovementState.IDLE
-				
+	_state_label.text = MovementState.keys()[movement_state]
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
