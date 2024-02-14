@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cw616om8pc8qw"
-path="res://.godot/imported/vecteezy_green-background-high-quality_30668435.jpg-d896c3678ebf4bfad49322b9ed4e336a.ctex"
+uid="uid://ckvj442mh7s0r"
+path="res://.godot/imported/Crouch_Walking.png-f032d0c7809515eeb8e89a8a067fde48.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/vecteezy_green-background-high-quality_30668435.jpg"
-dest_files=["res://.godot/imported/vecteezy_green-background-high-quality_30668435.jpg-d896c3678ebf4bfad49322b9ed4e336a.ctex"]
+source_file="res://Assets/Crouch Idle/Crouch_Walking.png"
+dest_files=["res://.godot/imported/Crouch_Walking.png-f032d0c7809515eeb8e89a8a067fde48.ctex"]
 
 [params]
 

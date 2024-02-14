@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cns6bneqppi2s"
-path="res://.godot/imported/tileset_fields_wip.png-a8c1f3315f80e50298309d1cea83343f.ctex"
+uid="uid://cfpgvi3nfjnv8"
+path="res://.godot/imported/wood_ladder.png-7970ca28cb64b9f9450aa7c3c3c5e52c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/tileset_fields_wip.png"
-dest_files=["res://.godot/imported/tileset_fields_wip.png-a8c1f3315f80e50298309d1cea83343f.ctex"]
+source_file="res://Assets/Tiles/wood_ladder.png"
+dest_files=["res://.godot/imported/wood_ladder.png-7970ca28cb64b9f9450aa7c3c3c5e52c.ctex"]
 
 [params]
 

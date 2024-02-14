@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfpgvi3nfjnv8"
-path="res://.godot/imported/wood_ladder.png-d876b60a449c941f24a3c9f2595d7e35.ctex"
+uid="uid://bssis5w76arji"
+path="res://.godot/imported/Beretta.png-7b4df75944b400591817dbc349708599.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/wood_ladder.png"
-dest_files=["res://.godot/imported/wood_ladder.png-d876b60a449c941f24a3c9f2595d7e35.ctex"]
+source_file="res://Assets/Weapons/Beretta.png"
+dest_files=["res://.godot/imported/Beretta.png-7b4df75944b400591817dbc349708599.ctex"]
 
 [params]
 
