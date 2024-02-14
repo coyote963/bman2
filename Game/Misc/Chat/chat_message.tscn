@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bg37kq5ktwq84"]
+
+[node name="ChatMessage" type="Label"]
+custom_minimum_size = Vector2(5, 1)
+size_flags_horizontal = 3
+text = "Coyote: Sample Text for the funsies! Check what happens when I type a longer message!"
+autowrap_mode = 3

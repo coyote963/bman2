@@ -1,3 +1,6 @@
-[gd_scene format=3 uid="uid://bfngvicx1wmda"]
+[gd_scene load_steps=2 format=3 uid="uid://bfngvicx1wmda"]
+
+[ext_resource type="Script" path="res://Globals/Network/client.gd" id="1_31o5b"]
 
 [node name="Client" type="Node"]
+script = ExtResource("1_31o5b")
