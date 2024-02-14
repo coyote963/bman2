@@ -120,3 +120,9 @@ position = Vector2(1270, -33)
 
 [node name="4" type="Marker2D" parent="Spawnpoints"]
 position = Vector2(509, -1)
+
+[node name="GlobalUI" type="Node" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="GlobalUI"]
+
+[node name="Chat" parent="GlobalUI/CanvasLayer" instance=ExtResource("5_a2ab4")]
