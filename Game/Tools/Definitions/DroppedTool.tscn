@@ -12,7 +12,7 @@ properties/1/path = NodePath(".:syncvelocity")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="DroppedTool" type="CharacterBody2D"]
+[node name="DroppedTool" type="CharacterBody2D" groups=["DroppedToolGroup"]]
 collision_layer = 2
 script = ExtResource("1_v7eqn")
 

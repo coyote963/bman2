@@ -4,37 +4,58 @@ class_name Arms
 
 @onready var _arm_animations := $PrimaryAndArm/ArmAnimations as AnimationPlayer
 @export var input: PlayerInput
-var _p
-var _s
-var _is_holding_primary := true
+@export var collision_checker: Area2D
+
+const DroppedToolScene = preload("res://Game/Tools/Definitions/DroppedTool.tscn")
+
+var _primary : Tool
+var _secondary : Tool
+var _overlapping_dropped_tool: DroppedTool
 
 func _ready():
-	Signals.update_gun_sprites.connect(_handle_sprites_update)
+	NetworkTime.on_tick.connect(_tick)
+	_secondary = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
+	_primary = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
 
-func _update_sprites(sprite_node: Sprite2D, t: Tool):
-	if t:
-		sprite_node.texture = t.get_tool_texture()
-	else:
-		sprite_node.texture = null
-
-func _handle_sprites_update(p: Tool, s: Tool):
-	_update_sprites($PrimaryAndArm/PrimarySprite, p)
-	_update_sprites($SecondarySprite, s)
-	$Sprite2D.texture = null if not p else p.get_tool_texture()
 
 func reload():
-	# Play the reload animation
-	if _is_holding_primary:
-		_arm_animations.play("Reload")
-	else:
-		_arm_animations.play_backwards("Reload")
-	_is_holding_primary = not _is_holding_primary
+	_arm_animations.play("Reload")
 
+func handle_switch():
+	var temp = _primary
+	_primary = _secondary
+	_secondary = temp
+	_arm_animations.play("Switch")
 
+func handle_throw():
+	if _primary:
+		var dropped = DroppedToolScene.instantiate()
+		Network.game.world.add_child(dropped)
+		dropped.velocity = Vector2(100,100)
+		dropped.position = global_position
+		dropped.set_tool(_primary)
+		_primary = null
 
-func set_sprite(primary_texture, secondary_texture):
-	$WeaponSprite.set_texture(primary_texture)
+func handle_pickup():
+	var dt = collision_checker.get_overlapping_bodies().filter(func (x): return x.is_in_group("DroppedToolGroup"))
+	if dt:
+		handle_throw() 
+		_primary = dt[0].tool
+		dt[0].queue_free()
+		
+func update_sprites():
+	$SecondarySprite.texture = null if not _secondary else _secondary.get_tool_texture()
+	$PrimaryAndArm/PrimarySprite.texture = null if not _primary else _primary.get_tool_texture() 
+
+func _tick(delta, tick):
+	if input.switch[0]:
+		handle_switch()
+	elif input.throw[0]:
+		handle_throw()
+	elif input.interact[0]:
+		handle_pickup()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	$PrimaryAndArm.look_at(get_global_mouse_position())
+	update_sprites()

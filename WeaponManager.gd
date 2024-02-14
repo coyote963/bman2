@@ -35,23 +35,13 @@ func throw_weapon():
 		p = null
 	#update_weapon_sprites()
 
-func update_weapon_sprites():
-	Signals.update_gun_sprites.emit(p, s)
 
 func _tick(delta, tick):
-	if input.switch[0]:
-		switch_weapons()
-		arms.switch()
-	elif input.throw[0]:
-		arms.throw()
-		throw_weapon()
-	else:
-		arms.idle()
-	
-	if input.interact[0]:
-		s = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
-		p = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
-	update_weapon_sprites()
-
-
+	if input:
+		if input.switch[0]:
+			switch_weapons()
+			arms.switch()
+		elif input.throw[0]:
+			arms.throw()
+			throw_weapon()
 
