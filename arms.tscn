@@ -366,10 +366,11 @@ position = Vector2(0, -16)
 script = ExtResource("1_6hpi7")
 
 [node name="SecondarySprite" type="Sprite2D" parent="."]
+modulate = Color(0, 1, 1, 1)
 rotation = 6.28319
 scale = Vector2(0.75, 0.75)
 
-[node name="PrimaryAndArm" type="Sprite2D" parent="."]
+[node name="PrimaryAndArm" type="Marker2D" parent="."]
 
 [node name="PrimarySprite" type="Sprite2D" parent="PrimaryAndArm"]
 z_index = 1

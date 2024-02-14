@@ -47,7 +47,7 @@ var has_double_jump = false
 var roll_timer : SceneTreeTimer
 var last_rolled := -1
 var is_rolling = false
-
+var _is_facing_left = false
 
 
 func _ready():
@@ -72,7 +72,7 @@ func _on_rolling_timer_timeout():
 
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation():
-	var _is_facing_left = input.mouse_coordinates[0] < _animation_sprites.global_position.x
+	_is_facing_left = input.mouse_coordinates[0] < _animation_sprites.global_position.x
 	var _is_moving_left = input.direction.x < 0
 	_animation_sprites.flip_h = _is_facing_left
 	match movement_state:
@@ -112,6 +112,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		reload.emit()
 	if input.switch[0]:
 		switch_weapons.emit()
+	print(input.interact)
 	$State.text = MovementState.keys()[movement_state]
 	match movement_state:
 		MovementState.IDLE:
@@ -129,9 +130,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if input.jump[0]:
 				velocity.y = jump_initial_speed
 				movement_state = MovementState.JUMPING
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
 			if input.down[1]:
 				movement_state = MovementState.CROUCH_IDLE
 		
@@ -151,9 +149,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if input.jump[0]:
 				velocity.y = jump_initial_speed
 				movement_state = MovementState.JUMPING
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
 			if input.down[0]:
 				velocity.x = roll_speed * (velocity.x / abs(velocity.x))
 				last_rolled = NetworkTime.tick
@@ -183,10 +178,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if is_on_floor():
 				has_double_jump = true
 				movement_state = MovementState.IDLE
-			if can_climb_ladder():
-				has_double_jump = true
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
 			if input.jump[2] and velocity.y < 0:
 				velocity.y *= jump_release_slowdown
 			if input.jump[0] and has_double_jump:
@@ -203,9 +194,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
 			if not _rightRaycast.is_colliding() and not _leftRaycast.is_colliding():
 				movement_state = MovementState.JUMPING
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
 			if is_on_floor():
 				movement_state = MovementState.IDLE
 			if input.jump[0]:
@@ -245,9 +233,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				movement_state = MovementState.JUMPING
 			if not input.down[1]:
 				movement_state = MovementState.IDLE
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
 			
 		MovementState.CROUCH_WALK:
 			velocity.x = move_toward(
@@ -259,14 +244,10 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				movement_state = MovementState.JUMPING
 			if not input.down[1] or input.down[2]:
 				movement_state = MovementState.RUNNING
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
 			if input.jump[0]:
 				velocity.y = jump_initial_speed * delta
 				movement_state = MovementState.JUMPING
 			
-		
 		MovementState.ROLLING:
 			if input.down[1]:
 				velocity.y += gravity * fastfall_multiplier * delta
@@ -276,10 +257,12 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				movement_state = MovementState.IDLE
 			if input.jump[0]:
 				movement_state = MovementState.JUMPING
-			if can_climb_ladder():
-				clamp_to_ladder()
-				movement_state = MovementState.CLIMBING
-		
+	
+	if can_climb_ladder() and !movement_state == MovementState.CLIMBING:
+		has_double_jump = true
+		clamp_to_ladder()
+		movement_state = MovementState.CLIMBING
+	
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor

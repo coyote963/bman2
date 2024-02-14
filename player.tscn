@@ -434,6 +434,7 @@ unique_name_in_owner = true
 layout_mode = 0
 offset_right = 103.0
 offset_bottom = 23.0
+text = "Ammo"
 
 [node name="WeaponManager" type="Node2D" parent="."]
 script = ExtResource("11_lx2p7")
