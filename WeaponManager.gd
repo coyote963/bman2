@@ -14,16 +14,16 @@ var s
 
 func _ready():
 	# Placeholder for when we make an actual weapon selector
-	p = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
 	s = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
+	p = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
 	NetworkTime.on_tick.connect(_tick)
-	update_weapon_sprites()
+	#update_weapon_sprites()
 
 func switch_weapons():
 	var temp = p
 	p = s
 	s = temp
-	update_weapon_sprites()
+	#update_weapon_sprites()
 
 func throw_weapon():
 	if p:
@@ -33,7 +33,7 @@ func throw_weapon():
 		dropped.position = global_position
 		dropped.set_tool(p)
 		p = null
-		update_weapon_sprites()
+	#update_weapon_sprites()
 
 func update_weapon_sprites():
 	Signals.update_gun_sprites.emit(p, s)
@@ -42,7 +42,16 @@ func _tick(delta, tick):
 	if input.switch[0]:
 		switch_weapons()
 		arms.switch()
-	if input.throw[0]:
+	elif input.throw[0]:
 		arms.throw()
 		throw_weapon()
+	else:
+		arms.idle()
 	
+	if input.interact[0]:
+		s = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
+		p = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
+	update_weapon_sprites()
+
+
+
