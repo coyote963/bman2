@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://bsu186h56yepx"]
 
-[ext_resource type="Script" path="res://Arms.gd" id="1_6hpi7"]
+[ext_resource type="Script" path="res://Scenes/Arms.gd" id="1_6hpi7"]
 [ext_resource type="Texture2D" uid="uid://bssis5w76arji" path="res://Assets/Weapons/Beretta.png" id="2_ibf4s"]
 [ext_resource type="Texture2D" uid="uid://c0wade07cia2k" path="res://icon.svg" id="3_hdvsb"]
 
