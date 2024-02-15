@@ -14,7 +14,7 @@ var _overlapping_dropped_tool: DroppedTool
 
 func _ready():
 	NetworkTime.on_tick.connect(_tick)
-	_secondary = load("res://Game/Tools/Packed/Rifle.tscn").instantiate()
+	_secondary = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
 	_primary = load("res://Game/Tools/Packed/Pistol.tscn").instantiate()
 
 
