@@ -50,6 +50,8 @@ var is_rolling = false
 var _is_facing_left = false
 
 
+
+
 func _ready():
 	if use_global_gravity:
 		gravity = Globals.gravity
@@ -72,7 +74,9 @@ func _on_rolling_timer_timeout():
 
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation():
+
 	_is_facing_left = input.mouse_coordinates[0] < _animation_sprites.global_position.x
+
 	var _is_moving_left = input.direction.x < 0
 	_animation_sprites.flip_h = _is_facing_left
 	match movement_state:
@@ -112,7 +116,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		reload.emit()
 	if input.switch[0]:
 		switch_weapons.emit()
-	print(input.interact)
+
 	$State.text = MovementState.keys()[movement_state]
 	match movement_state:
 		MovementState.IDLE:
