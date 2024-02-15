@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://burgab8scmi1x"]
-
-[ext_resource type="Script" path="res://Game/Tools/Definitions/Gun.gd" id="1_73kb0"]
-[ext_resource type="PackedScene" uid="uid://m11dido5jku7" path="res://Game/Tools/Definitions/Tool.tscn" id="1_b1qbh"]
-
-[node name="Gun" instance=ExtResource("1_b1qbh")]
-script = ExtResource("1_73kb0")
-projectile = null
-weapon_stats = null
