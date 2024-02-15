@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cv3lgr0m0wamp"]
+
+[ext_resource type="PackedScene" uid="uid://m11dido5jku7" path="res://Game/Tools/Definitions/Tool.tscn" id="1_wisbk"]
+
+[sub_resource type="GDScript" id="GDScript_3spm3"]
+script/source = "extends Gun
+
+class_name Blaster
+"
+
+[node name="Blaster" instance=ExtResource("1_wisbk")]
+script = SubResource("GDScript_3spm3")
+projectile = null
+weapon_stats = null
