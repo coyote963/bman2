@@ -1,0 +1,9 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvhcgj02nmm6a"]
+
+[ext_resource type="PackedScene" uid="uid://burgab8scmi1x" path="res://Game/Tools/Definitions/Gun.tscn" id="1_3ur20"]
+[ext_resource type="PackedScene" uid="uid://c6r8wklrbjbcs" path="res://Game/Projectiles/Packed/RifleProjectile.tscn" id="2_tv2sc"]
+[ext_resource type="Texture2D" uid="uid://c8xdn3u0b5qo" path="res://Assets/Weapons/M4_alt.png" id="3_etagf"]
+
+[node name="Gun" instance=ExtResource("1_3ur20")]
+projectile = ExtResource("2_tv2sc")
+tool_texture = ExtResource("3_etagf")

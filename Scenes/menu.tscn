@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://ocucrxbo6cki"]
+[gd_scene load_steps=3 format=3 uid="uid://ocucrxbo6cki"]
 
 [ext_resource type="Script" path="res://menu.gd" id="1_m88sc"]
+[ext_resource type="ButtonGroup" uid="uid://gwugwgbdhypc" path="res://weapselect_buttongroup.tres" id="2_xlwrl"]
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -47,8 +48,26 @@ placeholder_text = "Player Name"
 layout_mode = 2
 text = "Generate"
 
+[node name="WeaponSwitcher" type="BoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+vertical = true
+
+[node name="Rifle" type="Button" parent="HBoxContainer/WeaponSwitcher"]
+layout_mode = 2
+toggle_mode = true
+button_group = ExtResource("2_xlwrl")
+text = "Rifle"
+
+[node name="Pistol" type="Button" parent="HBoxContainer/WeaponSwitcher"]
+layout_mode = 2
+toggle_mode = true
+button_group = ExtResource("2_xlwrl")
+text = "Pistol"
+
 [connection signal="text_changed" from="HBoxContainer/MainMenu/IP" to="." method="_on_ip_text_changed"]
 [connection signal="pressed" from="HBoxContainer/MainMenu/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="HBoxContainer/MainMenu/Join" to="." method="_on_join_pressed"]
 [connection signal="text_changed" from="HBoxContainer/PlayerInfo/PlayerName" to="." method="_on_player_name_text_changed"]
 [connection signal="pressed" from="HBoxContainer/PlayerInfo/Generate" to="." method="_on_generate_pressed"]
+[connection signal="pressed" from="HBoxContainer/WeaponSwitcher/Rifle" to="." method="_on_rifle_pressed"]
+[connection signal="pressed" from="HBoxContainer/WeaponSwitcher/Pistol" to="." method="_on_pistol_pressed"]

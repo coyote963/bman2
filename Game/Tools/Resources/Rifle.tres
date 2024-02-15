@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="GunResource" load_steps=2 format=3 uid="uid://bki0qdkvevrgc"]
+[gd_resource type="Resource" script_class="GunStats" load_steps=2 format=3 uid="uid://bki0qdkvevrgc"]
 
-[ext_resource type="Script" path="res://Game/Tools/Definitions/GunResource.gd" id="1_445fb"]
+[ext_resource type="Script" path="res://Game/Tools/Definitions/GunStats.gd" id="1_irgxx"]
 
 [resource]
-script = ExtResource("1_445fb")
-reserve_ammo = 1000
-mag_size = 1000
+script = ExtResource("1_irgxx")
+reserve_ammo = 160
+mag_size = 40
 reload_time = 1.0
-weight = 1.0
+weight = 10.0

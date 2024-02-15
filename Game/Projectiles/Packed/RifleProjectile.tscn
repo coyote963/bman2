@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6r8wklrbjbcs"]
+
+[ext_resource type="PackedScene" uid="uid://b0okl2t26t6kw" path="res://Game/Projectiles/Definitions/projectile.tscn" id="1_rospy"]
+
+[node name="RifleProjectile" instance=ExtResource("1_rospy")]

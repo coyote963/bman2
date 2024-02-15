@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ProjectileStats" load_steps=2 format=3 uid="uid://dbyoacpq468ed"]
+
+[ext_resource type="Script" path="res://Game/Projectiles/Definitions/ProjectileStats.gd" id="1_m8wuo"]
+
+[resource]
+script = ExtResource("1_m8wuo")
+speed = 650
+gravity_affect = 0.25
+gravity = 100
+lifetime = 5
+use_global_gravity = true

@@ -17,3 +17,9 @@ func _on_generate_pressed():
 
 func _on_player_name_text_changed(new_text):
 	Globals.player_name = new_text
+
+func _on_rifle_pressed():
+	pass # link to player getting rifle on spawn
+
+func _on_pistol_pressed():
+	pass # link to player getting pistol on spawn
