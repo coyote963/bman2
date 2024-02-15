@@ -31,7 +31,9 @@ func handle_throw():
 	if _primary:
 		var dropped = DroppedToolScene.instantiate()
 		Network.game.world.add_child(dropped)
-		dropped.velocity = Vector2(100,100)
+
+		dropped.velocity = Vector2(100*$PrimaryAndArm.scale.y,100)
+
 		dropped.position = global_position
 		dropped.set_tool(_primary)
 		_primary = null
@@ -58,4 +60,10 @@ func _tick(delta, tick):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	$PrimaryAndArm.look_at(get_global_mouse_position())
+
+	if owner._is_facing_left:
+		$PrimaryAndArm.scale.y = -1
+	else:
+		$PrimaryAndArm.scale.y = 1
+
 	update_sprites()
