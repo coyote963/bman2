@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://ocucrxbo6cki"]
+
+[ext_resource type="Script" path="res://menu.gd" id="1_m88sc"]
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_m88sc")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+offset_right = 256.0
+offset_bottom = 101.0
+
+[node name="MainMenu" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="IP" type="LineEdit" parent="HBoxContainer/MainMenu"]
+layout_mode = 2
+text = "127.0.0.1"
+
+[node name="Host" type="Button" parent="HBoxContainer/MainMenu"]
+layout_mode = 2
+text = "Host
+"
+
+[node name="Join" type="Button" parent="HBoxContainer/MainMenu"]
+layout_mode = 2
+text = "Join
+"
+
+[node name="PlayerInfo" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerName" type="LineEdit" parent="HBoxContainer/PlayerInfo"]
+layout_mode = 2
+text = "KZT"
+placeholder_text = "Player Name"
+
+[node name="Generate" type="Button" parent="HBoxContainer/PlayerInfo"]
+layout_mode = 2
+text = "Generate"
+
+[connection signal="text_changed" from="HBoxContainer/MainMenu/IP" to="." method="_on_ip_text_changed"]
+[connection signal="pressed" from="HBoxContainer/MainMenu/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="HBoxContainer/MainMenu/Join" to="." method="_on_join_pressed"]
+[connection signal="text_changed" from="HBoxContainer/PlayerInfo/PlayerName" to="." method="_on_player_name_text_changed"]
+[connection signal="pressed" from="HBoxContainer/PlayerInfo/Generate" to="." method="_on_generate_pressed"]
