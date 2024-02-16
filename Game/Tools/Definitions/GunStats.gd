@@ -1,6 +1,6 @@
 extends Resource
 
-class_name GunResource
+class_name GunStats
 
 @export var reserve_ammo: int
 @export var mag_size: int

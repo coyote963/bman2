@@ -8,11 +8,6 @@ radius = 3.0
 [node name="Projectile" type="RayCast2D"]
 target_position = Vector2(0, 0)
 script = ExtResource("1_pewvj")
-speed = null
-gravity_affect = null
-gravity = null
-lifetime = null
-use_global_gravity = null
 
 [node name="Hitbox" type="Area2D" parent="."]
 
@@ -25,6 +20,8 @@ width = 2.0
 default_color = Color(1, 0, 0.0470588, 1)
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="Node" type="Node" parent="."]
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
