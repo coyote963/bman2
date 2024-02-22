@@ -28,10 +28,10 @@ var use_global_gravity = false
 @export var jump_release_slowdown = 0.7
 
 @export var walljump_initial_vertical_speed = -1400
-@export var walljump_initial_horizontal_speed = -700
+@export var walljump_initial_horizontal_speed = -1000
 @export var wallslide_friction = 0.4
 
-@export var ladder_dismount_velocity = Vector2(-700, -1000)
+@export var ladder_dismount_velocity = Vector2(-750, -1000)
 @export var climb_speed = 500
 @export var crouch_walk_speed = 600
 @export var roll_speed = 300
@@ -86,11 +86,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if input.direction.x == 0 and is_on_floor():
 				velocity.x = move_toward(velocity.x, 0, ground_friction)
 			if input.direction.x != 0 and is_on_floor():
-				velocity.x = move_toward(
-					velocity.x,
-					input.direction.x * ground_max_speed,
-					ground_acceleration
-				)
+				velocity.x = move_toward(velocity.x, input.direction.x * ground_max_speed, ground_acceleration)
 				movement_state = Globals.MovementState.RUNNING
 			if not is_on_floor():
 				movement_state = Globals.MovementState.JUMPING
@@ -107,11 +103,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				if velocity.x == 0:
 					movement_state = Globals.MovementState.IDLE
 			if input.direction.x != 0 and is_on_floor():
-				velocity.x = move_toward(
-					velocity.x,
-					input.direction.x * ground_max_speed,
-					ground_acceleration
-				)
+				velocity.x = move_toward(velocity.x, input.direction.x * ground_max_speed, ground_acceleration)
 			if input.direction.x != 0 and is_on_floor():
 				if input.down[1]:
 					velocity.x = move_toward(velocity.x, input.direction.x * ground_max_speed * crouch_penalty, ground_acceleration)
@@ -167,10 +159,10 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		Globals.MovementState.WALL_SLIDE:
 			if input.down[1]:
 				velocity.y = 300
-			elif velocity.y < 0:
+			elif velocity.y >= 0:
 				velocity.y = 250
 			else:
-				velocity.y = 250
+				velocity.y += 200
 			velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
 			if not _rightRaycast.is_colliding() and not _leftRaycast.is_colliding():
 				movement_state = Globals.MovementState.JUMPING
@@ -182,10 +174,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if input.jump[0]:
 				has_double_jump = true
 				if _leftRaycast.is_colliding():
-					velocity = Vector2(
-						-1 * walljump_initial_horizontal_speed,
-						walljump_initial_vertical_speed
-					)
+					velocity = Vector2(-1 * walljump_initial_horizontal_speed,walljump_initial_vertical_speed)
 				else:
 					velocity = Vector2(
 						walljump_initial_horizontal_speed,
@@ -195,40 +184,17 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				
 		Globals.MovementState.CLIMBING:
 			if input.interact[0]:
-				velocity = Vector2(0, jump_initial_speed)
+				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
 				movement_state = Globals.MovementState.JUMPING
 			if input.direction.x != 0:
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
 				movement_state = Globals.MovementState.JUMPING
 			elif on_ladder:
-				velocity.y = (
-					int(input.down[1]) * climb_speed - 
-					int(input.jump[1]) * climb_speed
-				)
+				velocity.y = (int(input.down[1]) * climb_speed - int(input.jump[1]) * climb_speed)
 			else:
 				velocity.y = 0
 				movement_state = Globals.MovementState.JUMPING
-			if velocity.y == 0:
-				movement_state = Globals.MovementState.HANGING
 				
-		Globals.MovementState.HANGING:
-			if input.interact[0]:
-				velocity.y = jump_initial_speed
-				movement_state = Globals.MovementState.JUMPING
-			if input.direction.x != 0:
-				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
-				movement_state = Globals.MovementState.JUMPING
-			elif on_ladder:
-				velocity.y = (
-					int(input.down[1]) * climb_speed - 
-					int(input.jump[1]) * climb_speed
-				)
-				if velocity.y != 0:
-					movement_state = Globals.MovementState.CLIMBING
-			else:
-				velocity.y = jump_initial_speed
-			has_double_jump = true
-			
 		Globals.MovementState.ROLLING:
 			if input.down[1]:
 				velocity.y += gravity * fastfall_multiplier * delta
@@ -241,7 +207,6 @@ func _rollback_tick(delta, _tick, _is_fresh):
 			if can_climb_ladder():
 				clamp_to_ladder()
 				movement_state = Globals.MovementState.CLIMBING
-		
 	if can_climb_ladder() and !movement_state == Globals.MovementState.CLIMBING:
 		has_double_jump = true
 		clamp_to_ladder()
