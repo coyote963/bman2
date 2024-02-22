@@ -25,13 +25,6 @@ func play_animation(movement_state):
 				_animation_player.play_backwards("Running")
 			else:
 				_animation_player.play("Running")
-		Globals.MovementState.CROUCH_WALK:
-			if _is_facing_left != _is_moving_left:
-				_animation_player.play_backwards("Crouching")
-			else:
-				_animation_player.play("Crouching")
-		Globals.MovementState.CROUCH_IDLE:
-			_animation_player.play("Crouching")
 		Globals.MovementState.ROLLING:
 			_animation_player.play("Rolling")
 		Globals.MovementState.CLIMBING:

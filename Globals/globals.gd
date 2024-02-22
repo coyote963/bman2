@@ -5,7 +5,7 @@ extends Node
 var namer = NameGen.new()
 var player_name = ""
 
-enum MovementState { RUNNING, IDLE, JUMPING, CROUCH_IDLE, CROUCH_WALK, CLIMBING, WALL_SLIDE, ROLLING }
+enum MovementState { RUNNING, IDLE, JUMPING, CLIMBING, WALL_SLIDE, ROLLING, HANGING }
 
 var movement_state = MovementState.IDLE
 
