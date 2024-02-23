@@ -22,13 +22,13 @@ var use_global_gravity = false
 @export var ground_max_speed = 500
 @export var ground_acceleration = 150
 
-@export var double_jump_initial_speed = -1300
+@export var double_jump_initial_speed = -1000
 @export var jump_initial_speed = -1200
-@export var fastfall_multiplier = 1.3
+@export var fastfall_multiplier = 1.1
 @export var jump_release_slowdown = 0.7
 
-@export var walljump_initial_vertical_speed = -1400
-@export var walljump_initial_horizontal_speed = -1000
+@export var walljump_initial_vertical_speed = -1200
+@export var walljump_initial_horizontal_speed = -1300
 @export var wallslide_friction = 0.4
 
 @export var ladder_dismount_velocity = Vector2(-750, -1000)
@@ -157,12 +157,12 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity.y = double_jump_initial_speed
 		
 		Globals.MovementState.WALL_SLIDE:
-			if input.down[1]:
-				velocity.y = 300
-			elif velocity.y >= 0:
+			if velocity.y >= 0:
 				velocity.y = 250
+				if input.down[1]:
+					velocity.y = 300
 			else:
-				velocity.y += 200
+				velocity.y += 250
 			velocity.x = move_toward(velocity.x, input.direction.x * air_max_speed, air_acceleration)
 			if not _rightRaycast.is_colliding() and not _leftRaycast.is_colliding():
 				movement_state = Globals.MovementState.JUMPING
@@ -176,10 +176,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				if _leftRaycast.is_colliding():
 					velocity = Vector2(-1 * walljump_initial_horizontal_speed,walljump_initial_vertical_speed)
 				else:
-					velocity = Vector2(
-						walljump_initial_horizontal_speed,
-						walljump_initial_vertical_speed
-					)
+					velocity = Vector2(walljump_initial_horizontal_speed, walljump_initial_vertical_speed)
 				movement_state = Globals.MovementState.JUMPING
 				
 		Globals.MovementState.CLIMBING:
@@ -187,7 +184,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
 				movement_state = Globals.MovementState.JUMPING
 			if input.direction.x != 0:
-				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x, ladder_dismount_velocity.y)
+				velocity = Vector2(input.direction.x * -1 * ladder_dismount_velocity.x - velocity.x, ladder_dismount_velocity.y)
 				movement_state = Globals.MovementState.JUMPING
 			elif on_ladder:
 				velocity.y = (int(input.down[1]) * climb_speed - int(input.jump[1]) * climb_speed)

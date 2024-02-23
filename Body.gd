@@ -26,22 +26,20 @@ func play_animation(movement_state):
 		Globals.MovementState.JUMPING:
 			if input.down[1]:
 				_animation_player.play("Crouch_Jump")
+			elif get_parent().velocity.y < 0:
+				_animation_player.play("Jump_Up")
 			else:
-				if get_parent().velocity.y < 0:
-					_animation_player.play("Jump_Up")
-				else:
-					_animation_player.play("Jump_Down")
+				_animation_player.play("Jump_Down")
 		Globals.MovementState.RUNNING:
 			if input.down[1]:
 				if _is_facing_left != _is_moving_left:
 					_animation_player.play_backwards("Crouch_Walk")
 				else:
 					_animation_player.play("Crouch_Walk")
+			elif _is_facing_left != _is_moving_left:
+				_animation_player.play_backwards("Running")
 			else:
-				if _is_facing_left != _is_moving_left:
-					_animation_player.play_backwards("Running")
-				else:
-					_animation_player.play("Running")
+				_animation_player.play("Running")
 		Globals.MovementState.ROLLING:
 			if _is_facing_left != _is_moving_left:
 				_animation_player.play("Back_Roll")
