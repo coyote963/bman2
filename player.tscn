@@ -1,14 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://s7nbd7fg7l3k"]
+[gd_scene load_steps=11 format=3 uid="uid://s7nbd7fg7l3k"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_rhoob"]
 [ext_resource type="Script" path="res://Camera2D.gd" id="3_8bmha"]
+[ext_resource type="Script" path="res://player_input.gd" id="5_hgte7"]
 [ext_resource type="PackedScene" uid="uid://clt5qhxxannil" path="res://Scenes/hud.tscn" id="6_xipfp"]
+[ext_resource type="Script" path="res://arm_script.gd" id="8_6fsp6"]
 [ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="8_aqte3"]
 [ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="9_18a01"]
-[ext_resource type="Script" path="res://PlayerInput.gd" id="9_63hcw"]
 [ext_resource type="PackedScene" uid="uid://cx4w1dpy24rfv" path="res://Scenes/body.tscn" id="9_w6l7k"]
-[ext_resource type="Script" path="res://WeaponManager.gd" id="11_lx2p7"]
-[ext_resource type="PackedScene" uid="uid://bsu186h56yepx" path="res://Scenes/arms.tscn" id="13_lqk4y"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jywao"]
 size = Vector2(38, 111)
@@ -23,6 +22,16 @@ input = NodePath("PlayerInput")
 ladder_checker = NodePath("CollisionChecker")
 wallslide_friction = 0.01
 roll_speed = 1400
+
+[node name="Arms" type="Node2D" parent="." node_paths=PackedStringArray("input", "collision_checker")]
+script = ExtResource("8_6fsp6")
+input = NodePath("../PlayerInput")
+collision_checker = NodePath("../CollisionChecker")
+
+[node name="SecondarySprite" type="Sprite2D" parent="Arms"]
+
+[node name="Body" parent="." node_paths=PackedStringArray("input") instance=ExtResource("9_w6l7k")]
+input = NodePath("../PlayerInput")
 
 [node name="RightWalljumpRaycast" type="RayCast2D" parent="."]
 position = Vector2(1, 0)
@@ -72,7 +81,7 @@ horizontal_alignment = 1
 script = ExtResource("8_aqte3")
 root = NodePath("..")
 state_properties = Array[String]([":global_position", ":velocity", ":movement_state", ":has_double_jump"])
-input_properties = Array[String](["PlayerInput:mouse_coordinates", "PlayerInput:down", "PlayerInput:jump", "PlayerInput:interact", "PlayerInput:direction", "PlayerInput:reload", "PlayerInput:switch", "PlayerInput:is_firing", "PlayerInput:throw"])
+input_properties = Array[String](["PlayerInput:mouse_coordinates", "PlayerInput:down", "PlayerInput:jump", "PlayerInput:interact", "PlayerInput:direction", "PlayerInput:reload", "PlayerInput:switch", "PlayerInput:fire", "PlayerInput:throw"])
 
 [node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("9_18a01")
@@ -80,7 +89,7 @@ root = NodePath("..")
 properties = Array[String]([":global_position", ":velocity"])
 
 [node name="PlayerInput" type="Node" parent="."]
-script = ExtResource("9_63hcw")
+script = ExtResource("5_hgte7")
 
 [node name="EnvironmentCollision" type="CollisionShape2D" parent="."]
 position = Vector2(0, 8.5)
@@ -100,16 +109,6 @@ one_shot = true
 
 [node name="HUD" parent="." instance=ExtResource("6_xipfp")]
 unique_name_in_owner = true
-
-[node name="WeaponManager" type="Node2D" parent="."]
-script = ExtResource("11_lx2p7")
-
-[node name="Arms" parent="." node_paths=PackedStringArray("input", "collision_checker") instance=ExtResource("13_lqk4y")]
-input = NodePath("../PlayerInput")
-collision_checker = NodePath("../CollisionChecker")
-
-[node name="Body" parent="." node_paths=PackedStringArray("input") instance=ExtResource("9_w6l7k")]
-input = NodePath("../PlayerInput")
 
 [connection signal="body_entered" from="CollisionChecker" to="." method="_on_ladder_checker_body_entered"]
 [connection signal="body_exited" from="CollisionChecker" to="." method="_on_ladder_checker_body_exited"]

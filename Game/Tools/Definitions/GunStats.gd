@@ -6,3 +6,4 @@ class_name GunStats
 @export var mag_size: int
 @export var reload_time: float
 @export var weight: float
+@export var fire_rate: float

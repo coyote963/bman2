@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="GunResource" load_steps=2 format=3 uid="uid://fepoah556e0a"]
+[gd_resource type="Resource" script_class="GunStats" load_steps=2 format=3 uid="uid://fepoah556e0a"]
 
 [ext_resource type="Script" path="res://Game/Tools/Definitions/GunStats.gd" id="1_6tblm"]
 
@@ -8,3 +8,4 @@ reserve_ammo = 100
 mag_size = 12
 reload_time = 2.0
 weight = 3.0
+fire_rate = 4.0

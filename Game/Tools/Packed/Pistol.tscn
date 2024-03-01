@@ -1,13 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://mp7mryxdqjyi"]
+[gd_scene load_steps=7 format=3 uid="uid://mp7mryxdqjyi"]
 
 [ext_resource type="PackedScene" uid="uid://m11dido5jku7" path="res://Game/Tools/Definitions/Tool.tscn" id="1_j0jis"]
 [ext_resource type="Script" path="res://Game/Tools/Packed/Pistol.gd" id="1_pbbur"]
 [ext_resource type="PackedScene" uid="uid://cimkrvq4pv2tp" path="res://Game/Projectiles/Packed/BaseProjectile.tscn" id="3_dv5ci"]
 [ext_resource type="Resource" uid="uid://fepoah556e0a" path="res://Game/Tools/Resources/Pistol.tres" id="4_jfdyt"]
-[ext_resource type="Texture2D" uid="uid://bssis5w76arji" path="res://Assets/Weapons/Beretta.png" id="5_eadgg"]
+[ext_resource type="PackedScene" uid="uid://cl2ongffh0b6n" path="res://Scenes/Animations/pistol_animation.tscn" id="5_u8qsb"]
+[ext_resource type="Texture2D" uid="uid://bssis5w76arji" path="res://Assets/Weapons/Beretta.png" id="6_7nt4c"]
 
-[node name="Pistol" instance=ExtResource("1_j0jis")]
+[node name="Pistol" node_paths=PackedStringArray("tool_animation") instance=ExtResource("1_j0jis")]
 script = ExtResource("1_pbbur")
 projectile = ExtResource("3_dv5ci")
 weapon_stats = ExtResource("4_jfdyt")
-tool_texture = ExtResource("5_eadgg")
+tool_animation = NodePath("PistolAnimation")
+
+[node name="PistolAnimation" parent="." index="0" instance=ExtResource("5_u8qsb")]
+weapon_sprite = ExtResource("6_7nt4c")

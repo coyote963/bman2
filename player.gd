@@ -1,8 +1,6 @@
 extends CharacterBody2D
 @onready var _rightRaycast = $RightWalljumpRaycast
 @onready var _leftRaycast = $LeftWalljumpRaycast
-@onready var _animation_player = $AnimationPlayer
-@onready var _animation_sprites = $PlayerAnimationSprites
 
 @export var input: PlayerInput
 @export var ladder_checker: Area2D

@@ -102,7 +102,7 @@ layer_0/tile_data = PackedInt32Array(-262125, 0, 0, 65541, 0, 0, 5, 0, 0, -65531
 [node name="Sprite2D" type="Sprite2D" parent="World/ParallaxBackground"]
 texture = ExtResource("4_ow6t3")
 
-[node name="Players" type="Node" parent="."]
+[node name="Players" type="Node2D" parent="."]
 
 [node name="Spawnpoints" type="Node" parent="."]
 

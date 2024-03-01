@@ -11,7 +11,7 @@ var interact := [false, false, false ]
 var reload := [false, false, false]
 var switch := [false, false, false]
 var throw := [false, false, false]
-var is_firing := false
+var fire :=  [false, false, false]
 var mouse_coordinates = Vector2.ZERO
 
 
@@ -70,7 +70,7 @@ func _gather():
 	down = input_buffer.get_state("down")
 	jump = input_buffer.get_state("jump")
 	interact = input_buffer.get_state("interact")
-	is_firing = Input.is_action_pressed("fire")
+	fire = input_buffer.get_state("fire")
 	reload = input_buffer.get_state("reload")
 	switch = input_buffer.get_state("switch")
 	throw = input_buffer.get_state("throw")
